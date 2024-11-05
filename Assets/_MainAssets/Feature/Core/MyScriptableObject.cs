@@ -6,7 +6,7 @@ namespace Core
 {
     public abstract class MyScriptableObject : ScriptableObject, ISaveable
     {
-        public string id;
+        [HideInInspector] public string id;
 
         protected virtual void OnValidate()
         {
