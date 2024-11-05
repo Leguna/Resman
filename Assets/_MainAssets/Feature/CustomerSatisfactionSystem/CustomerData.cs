@@ -1,12 +1,12 @@
-﻿using UnityEngine;
+﻿using Core;
+using UnityEngine;
 
-namespace SO
+namespace CustomerSatisfactionSystem
 {
     [CreateAssetMenu(fileName = "CustomerData", menuName = "RestaurantGame/CustomerData")]
-    public class CustomerData : ScriptableObject
+    public class CustomerData : MyScriptableObject
     {
         public float patience;
         public float satisfactionThreshold;
-        
     }
 }

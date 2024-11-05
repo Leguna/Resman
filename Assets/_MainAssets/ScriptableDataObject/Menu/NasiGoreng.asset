@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f66761b817ff534cb2c730aacf4d6ab, type: 3}
   m_Name: NasiGoreng
   m_EditorClassIdentifier: 
+  id: a2135f9d-3b56-4eac-8850-6f4dacdb27c2
   itemName: Nasi Goreng
   bgColor: {r: 0.7176471, g: 0.32549018, b: 0.32875866, a: 1}
   cookingTime: 5
-  burnTime: 5
+  burnTime: 10
   allowedToppings:
   - {fileID: 11400000, guid: 81e8cac590e43d945ae80f06ad7fcc02, type: 2}
   - {fileID: 11400000, guid: e15ad03720d1c1944adb89e8a07ebbfe, type: 2}

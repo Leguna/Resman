@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f66761b817ff534cb2c730aacf4d6ab, type: 3}
   m_Name: MieGoreng
   m_EditorClassIdentifier: 
+  id: 436b9440-0864-4925-a0cb-beab3da9e8cc
   itemName: Mie Goreng
   bgColor: {r: 0.8679245, g: 0.8314265, b: 0.3717337, a: 1}
   cookingTime: 4
-  burnTime: 4
+  burnTime: 8
   allowedToppings:
   - {fileID: 11400000, guid: 2d6d7be8b73788e4992f27b1a36ebcae, type: 2}
   - {fileID: 11400000, guid: 5189887ac76a53b469f526b895234262, type: 2}

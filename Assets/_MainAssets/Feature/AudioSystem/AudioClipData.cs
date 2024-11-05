@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SO
+namespace AudioSystem
 {
     [CreateAssetMenu(fileName = "AudioClipData", menuName = "RestaurantGame/AudioClipData")]
     public class AudioClipData : ScriptableObject {

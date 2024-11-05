@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+﻿using Core;
+using UnityEngine;
 
-namespace SO
+namespace GameObjectiveSystem
 {
     [CreateAssetMenu(fileName = "ObjectiveData", menuName = "RestaurantGame/ObjectiveData")]
-    public class ObjectiveData : ScriptableObject
+    public class ObjectiveData : MyScriptableObject
     {
-        public string id;
         public int revenueGoal;
         public float satisfactionGoal;
         public int serveTimeGoal;
