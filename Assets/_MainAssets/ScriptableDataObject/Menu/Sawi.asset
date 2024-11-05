@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 198f938206934e88923b89dde0d69c21, type: 3}
+  m_Name: Sawi
+  m_EditorClassIdentifier: 
+  toppingName: Sawi
+  bgColor: {r: 0.35961193, g: 0.8396226, b: 0.4935774, a: 1}
+  price: 1
