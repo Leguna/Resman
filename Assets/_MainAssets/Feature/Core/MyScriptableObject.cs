@@ -4,9 +4,10 @@ using UnityEngine;
 
 namespace Core
 {
+    [Serializable]
     public abstract class MyScriptableObject : ScriptableObject, ISaveable
     {
-        [HideInInspector] public string id;
+        public string id;
 
         protected virtual void OnValidate()
         {

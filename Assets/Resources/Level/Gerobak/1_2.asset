@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52058a38fe2a4c61aec33db18b3fe773, type: 3}
   m_Name: 1_2
   m_EditorClassIdentifier: 
-  id: d611b48a-be5c-43c7-8a17-b779303ad011
-  objectives:
-  - targetAmount: 6
+  id: 5156344d-3b49-45cf-b65f-6170ff5a19e9
+  objectiveData:
+    targetAmount: 5
     currentAmount: 0
-    objectiveType: 2
+    objectiveType: 1
+  completionCondition: 1
+  customerLimit: 6
+  duration: 0

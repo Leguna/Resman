@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using Core;
 using StageSystem.Objective;
 using UnityEngine;
@@ -9,31 +8,48 @@ namespace StageSystem
     [CreateAssetMenu(fileName = "StageData", menuName = "StageSystem/StageData")]
     public class StageData : MyScriptableObject
     {
-        public List<ObjectiveData> objectives = new();
+        public ObjectiveData objectiveData;
+        public CompletionType completionCondition;
 
-        public int customerLimit;
-        public float duration;
+        public int customerLimit = 5;
+        public float duration = 60f;
 
-        public void SetObjectives(List<ObjectiveData> objectives)
+        public void UpdateObjective(float amount)
         {
-            this.objectives = objectives;
+            objectiveData.UpdateObjective(amount);
         }
 
-        public List<ObjectiveType> GetObjectives() => objectives.Select(objective => objective.objectiveType).ToList();
-
-        public void UpdateObjective(ObjectiveType objectiveType, float amount)
+        protected override void OnValidate()
         {
-            var objective = objectives.Find(obj => obj.objectiveType == objectiveType);
-            objective.UpdateObjective(amount);
-            Debug.Log($"Objective {objectiveType} updated with amount {amount}");
+            try
+            {
+                base.OnValidate();
+                switch (completionCondition)
+                {
+                    case CompletionType.Timed:
+                        customerLimit = 0;
+                        if (duration <= 0)
+                            throw new Exception("Duration must be greater than 0");
+                        break;
+                    case CompletionType.Customer:
+                        duration = 0;
+                        if (customerLimit <= 0)
+                            throw new Exception("Customer limit must be greater than 0");
+                        break;
+                    default:
+                        throw new Exception("Invalid completion condition");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Validation Error in {name}: {e.Message}", this);
+            }
         }
+    }
 
-        public string GetObjectiveDescription()
-        {
-            var objectiveDescriptions = objectives.Select(objective => objective.GetObjectiveDescription()).ToList();
-            return string.Join("\n", objectiveDescriptions);
-        }
-
-        public bool AreAllObjectivesAchieved() => objectives.All(objective => objective.IsAchieved);
+    public enum CompletionType
+    {
+        Timed,
+        Customer,
     }
 }

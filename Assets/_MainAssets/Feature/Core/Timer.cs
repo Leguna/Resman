@@ -19,6 +19,11 @@ namespace Core
             StartCoroutine(TimerCoroutine());
         }
 
+        protected void SetListener(Action onEnd)
+        {
+            OnTimerEnded = onEnd;
+        }
+
         public void StartTimer(float duration)
         {
             _duration = duration;
@@ -61,7 +66,7 @@ namespace Core
             return _elapsedTime;
         }
 
-        protected float GetRemainingTime()
+        public float GetRemainingTime()
         {
             return _duration - _elapsedTime;
         }

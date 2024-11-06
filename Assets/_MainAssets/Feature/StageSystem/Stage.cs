@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using StageSystem.Completion;
 using StageSystem.Objective;
 using UnityEngine;
 using Utilities;
@@ -10,45 +11,62 @@ namespace StageSystem
     {
         public StageData currentStageData;
         public StageState stageState;
-        [SerializeField] private StageTimer stageTimer;
+        public Action<StageState> onStageChanged = delegate { };
 
-        private readonly Action<StageState> _onStageChanged = delegate { };
+        [SerializeField] private StageTimer stageTimer;
+        [SerializeField] private CustomerCounter customerCounter;
+        [SerializeField] private ObjectiveManager objectiveManager;
 
         public void Init(StageData stageData)
         {
             currentStageData = stageData;
             stageState = StageState.Idle;
-            _onStageChanged?.Invoke(stageState);
-            stageTimer.Init(stageData.duration);
-            stageTimer.OnTimerEnded += () =>
+            onStageChanged?.Invoke(stageState);
+            objectiveManager.Init(stageData.objectiveData);
+            objectiveManager.SetListener(() => { print("Objective Achieved"); });
+            switch (stageData.completionCondition)
             {
-                stageState = StageState.Ended;
-                _onStageChanged?.Invoke(stageState);
-            };
+                case CompletionType.Timed:
+                    stageTimer.Init(stageData.duration, onTimerEnd: StageFinished);
+                    break;
+                case CompletionType.Customer:
+                    customerCounter.Init(stageData.customerLimit, onCustomerLimitReached: StageFinished);
+                    break;
+                default:
+                    throw new Exception("Invalid completion condition");
+            }
         }
 
-        public void ObjectiveUpdate(ObjectiveType objectiveType, float amount) =>
-            currentStageData.UpdateObjective(objectiveType, amount);
+        private void StageFinished()
+        {
+            stageState = StageState.Ended;
+            onStageChanged?.Invoke(stageState);
+        }
+
+        public void CustomerCounterIncrement() => customerCounter.IncrementCustomerCount();
+
+        public void ObjectiveUpdate(float amount) => objectiveManager.UpdateObjective(amount);
 
         public void Play()
         {
             stageState = StageState.Playing;
             stageTimer.StartTimer(currentStageData.duration);
-            _onStageChanged?.Invoke(stageState);
+            customerCounter.ResetCustomerCount();
+            onStageChanged?.Invoke(stageState);
         }
 
         public void Pause()
         {
             stageState = StageState.Paused;
             stageTimer.PauseTimer();
-            _onStageChanged?.Invoke(stageState);
+            onStageChanged?.Invoke(stageState);
         }
 
         public void Resume()
         {
             stageState = StageState.Playing;
             stageTimer.ResumeTimer();
-            _onStageChanged?.Invoke(stageState);
+            onStageChanged?.Invoke(stageState);
         }
 
         public static StageData LoadStageData(string path)
