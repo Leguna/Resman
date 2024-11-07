@@ -57,7 +57,7 @@ namespace Touch
         private void OnDoubleTap()
         {
             var pos = _touchInputAction.Touch.TapPos.ReadValue<Vector2>();
-            if (Vector2.Distance(pos, _lastTapPos) > 50) return;
+            if (Vector2.Distance(pos, _lastTapPos) > 100) return;
 
             if (_lastTapObj == null) return;
             var ray = _camera.ScreenPointToRay(pos);

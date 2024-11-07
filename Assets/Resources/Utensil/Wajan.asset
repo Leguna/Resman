@@ -17,5 +17,4 @@ MonoBehaviour:
   level: 1
   baseCookSpeed: 1
   upgradeMultiplier: 1.2
-  icon: {fileID: 0}
-  upgradeIcon: {fileID: 0}
+  color: {r: 1, g: 0.84057397, b: 0.495283, a: 1}

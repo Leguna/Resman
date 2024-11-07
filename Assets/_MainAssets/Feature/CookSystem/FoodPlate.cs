@@ -1,19 +1,41 @@
+using Animation;
+using Touch;
 using UnityEngine;
 
 namespace CookSystem
 {
-    public class FoodPlate : MonoBehaviour
+    public class FoodPlate : MonoBehaviour, ITouchable, IFood
     {
-        // Start is called before the first frame update
-        void Start()
+        private FoodItemData foodItemData;
+        [SerializeField] private FoodItemData allowedFoodItemData;
+        private IAnimate _animate;
+
+        private void Awake()
         {
-        
+            _animate = GetComponent<IAnimate>();
         }
 
-        // Update is called once per frame
-        void Update()
+        private void Init()
         {
-        
         }
+
+        public void Serve(FoodItemData item)
+        {
+            _animate.PlayAnimation();
+        }
+
+
+        public void Serve(IPutable<FoodItemData> item)
+        {
+            item.Put(foodItemData);
+        }
+
+        public void Put(FoodItemData item)
+        {
+            if (item != allowedFoodItemData) return;
+            foodItemData = item;
+        }
+
+        public void OnTouch() => Serve(foodItemData);
     }
 }

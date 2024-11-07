@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 2431188427795755937}
   - component: {fileID: 2431188427795755943}
   - component: {fileID: 2139530302}
-  - component: {fileID: 5835607011724471604}
+  - component: {fileID: -1403979093516225700}
   m_Layer: 0
   m_Name: Ingredients
   m_TagString: Untagged
@@ -216,7 +216,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   ingredient: {fileID: 11400000, guid: b65cda9b5ebbae6408a4665753d950c3, type: 2}
---- !u!114 &5835607011724471604
+--- !u!114 &-1403979093516225700
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -228,3 +228,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c6ab1d77435d34f91f00dc91d31a52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animationDuration: 0.15
+  scaleUpSize: 1.2
+  speed: 1

@@ -1,3 +1,5 @@
+using System;
+using Animation;
 using CookSystem.Ingredient;
 using Touch;
 using UnityEngine;
@@ -16,9 +18,12 @@ namespace CookSystem
 
         private bool _isCooking;
         private float _cookTime;
+        
+        private AnimateScale _animateScale;
 
-        private void Start()
+        private void Awake()
         {
+            _animateScale = GetComponent<AnimateScale>();
             Init(utensilData);
         }
 
@@ -57,6 +62,7 @@ namespace CookSystem
             UpdateUI();
             foodIcon.gameObject.SetActive(true);
             progress.gameObject.SetActive(true);
+            _animateScale.PlayAnimation();
             return true;
         }
 
@@ -64,12 +70,14 @@ namespace CookSystem
         {
             progress.color = Color.red;
             UpdateUI();
+            _animateScale.PlayAnimation();
         }
 
         private void OnBurnt()
         {
             _isCooking = false;
             UpdateUI();
+            _animateScale.PlayAnimation();
         }
 
         private void UpdateUI()
@@ -90,6 +98,7 @@ namespace CookSystem
             progress.color = Color.green;
             _cookedIngredientComponent.Reset();
             _isCooking = true;
+            _animateScale.PlayAnimation();
         }
 
         private void RemoveIngredient()
@@ -99,6 +108,7 @@ namespace CookSystem
             foodIcon.gameObject.SetActive(false);
             Destroy(_cookedIngredientComponent);
             _cookedIngredientComponent = null;
+            _animateScale.PlayAnimation();
         }
 
         private void PutOut()

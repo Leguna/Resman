@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 6497477277675634147}
   - component: {fileID: 6497477277675634145}
   - component: {fileID: 6497477277675634146}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Progress
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 6497477277998682487}
   - component: {fileID: 6497477277998682480}
   - component: {fileID: 6497477277998682486}
-  - component: {fileID: -8078654231952535502}
+  - component: {fileID: 1880822913063999875}
   m_Layer: 0
   m_Name: Utensil
   m_TagString: Untagged
@@ -189,7 +189,7 @@ Transform:
   m_GameObject: {fileID: 6497477277998682483}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.4033, y: -0.066, z: 0}
-  m_LocalScale: {x: 0.07374305, y: 0.19463292, z: 1.3461308}
+  m_LocalScale: {x: 1.346175, y: 1.346175, z: 1.3461308}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6497477277472636256}
@@ -291,7 +291,7 @@ MonoBehaviour:
   foodIcon: {fileID: 6497477277472636263}
   utensilIcon: {fileID: 6497477277998682487}
   utensilData: {fileID: 11400000, guid: a21c2399f0d22154ea1b48b4f54ee671, type: 2}
---- !u!114 &-8078654231952535502
+--- !u!114 &1880822913063999875
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -300,9 +300,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6497477277998682483}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c6ab1d77435d34f91f00dc91d31a52, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b73ad9710dc485199e7d0d65b95d61c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animationDuration: 0.2
+  scaleUpSize: 1.2
+  speed: 1
 --- !u!1 &6497477278020253832
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,7 +319,7 @@ GameObject:
   - component: {fileID: 6497477278020253836}
   - component: {fileID: 6497477278020253837}
   - component: {fileID: 6497477278020253838}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -404,7 +407,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 0
 --- !u!222 &6497477278020253838
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -412,4 +415,4 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6497477278020253832}
-  m_CullTransparentMesh: 1
+  m_CullTransparentMesh: 0
