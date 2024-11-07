@@ -14,9 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: a2135f9d-3b56-4eac-8850-6f4dacdb27c2
   itemName: Nasi Goreng
-  bgColor: {r: 0.7176471, g: 0.32549018, b: 0.32875866, a: 1}
-  cookingTime: 5
-  burnTime: 10
+  icon: {fileID: 21300000, guid: fd189f74001c1e64b891089d2ca36ce5, type: 3}
   allowedToppings:
   - {fileID: 11400000, guid: 81e8cac590e43d945ae80f06ad7fcc02, type: 2}
   - {fileID: 11400000, guid: e15ad03720d1c1944adb89e8a07ebbfe, type: 2}

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CookSystem.Ingredient
 {
-    public class IngredientComponent : MonoBehaviour, IPlateable
+    public class IngredientComponent : MonoBehaviour
     {
         [SerializeField] private IngredientData ingredient;
 
@@ -12,7 +12,6 @@ namespace CookSystem.Ingredient
         public IngredientState state;
         public Action onCooked;
         public Action onBurnt;
-        public Action onPut;
 
         public void Init(IngredientData data)
         {
@@ -77,16 +76,10 @@ namespace CookSystem.Ingredient
             };
         }
 
-        public void OnPut()
+        public FoodItemData GetFoodItemData()
         {
-            onPut?.Invoke();
-            Debug.Log("Ingredient put on plate");
+            return ingredient.cookedFood;
         }
-    }
-
-    public interface IPlateable
-    {
-        void OnPut();
     }
 
     public enum IngredientState

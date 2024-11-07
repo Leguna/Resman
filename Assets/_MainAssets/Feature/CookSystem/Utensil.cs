@@ -18,8 +18,10 @@ namespace CookSystem
 
         private bool _isCooking;
         private float _cookTime;
-        
+
         private AnimateScale _animateScale;
+
+        public Action<FoodItemData, Utensil> onServe;
 
         private void Awake()
         {
@@ -101,7 +103,7 @@ namespace CookSystem
             _animateScale.PlayAnimation();
         }
 
-        private void RemoveIngredient()
+        public void RemoveIngredient()
         {
             _isCooking = false;
             progress.gameObject.SetActive(false);
@@ -115,7 +117,7 @@ namespace CookSystem
         {
             if (_cookedIngredientComponent == null) return;
             if (_cookedIngredientComponent.state != IngredientState.Done) return;
-            RemoveIngredient();
+            onServe?.Invoke(_cookedIngredientComponent.GetFoodItemData(), this);
         }
 
         private void TrashBurnt()

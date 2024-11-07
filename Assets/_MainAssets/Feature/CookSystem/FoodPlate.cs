@@ -4,38 +4,53 @@ using UnityEngine;
 
 namespace CookSystem
 {
-    public class FoodPlate : MonoBehaviour, ITouchable, IFood
+    public class FoodPlate : MonoBehaviour, ITouchable, IOnDoubleTap, IFood
     {
-        private FoodItemData foodItemData;
-        [SerializeField] private FoodItemData allowedFoodItemData;
+        private FoodItemData _foodItemData;
         private IAnimate _animate;
+        [SerializeField] private FoodItemData allowedFoodItemData;
+        [SerializeField] private SpriteRenderer foodSpriteRenderer;
 
+        [SerializeField]
         private void Awake()
         {
             _animate = GetComponent<IAnimate>();
         }
 
-        private void Init()
+        public void Serve()
         {
-        }
-
-        public void Serve(FoodItemData item)
-        {
+            if (_foodItemData == null) return;
+            _foodItemData = null;
+            foodSpriteRenderer.gameObject.SetActive(false);
             _animate.PlayAnimation();
         }
 
-
-        public void Serve(IPutable<FoodItemData> item)
+        public bool Receive(FoodItemData item)
         {
-            item.Put(foodItemData);
+            if (_foodItemData != null) return false;
+            if (item != allowedFoodItemData) return false;
+            _foodItemData = item;
+            foodSpriteRenderer.gameObject.SetActive(true);
+            UpdateUI();
+            return true;
         }
 
-        public void Put(FoodItemData item)
+        private void UpdateUI()
         {
-            if (item != allowedFoodItemData) return;
-            foodItemData = item;
+            foodSpriteRenderer.sprite = _foodItemData.icon;
+            _animate.PlayAnimation();
         }
 
-        public void OnTouch() => Serve(foodItemData);
+        private void RemoveFoodItem()
+        {
+            if (_foodItemData == null) return;
+            _foodItemData = null;
+            foodSpriteRenderer.gameObject.SetActive(false);
+            _animate.PlayAnimation();
+        }
+
+        public void OnTouch() => Serve();
+
+        public void OnDoubleTap() => RemoveFoodItem();
     }
 }

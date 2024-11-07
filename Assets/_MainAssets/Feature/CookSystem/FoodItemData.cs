@@ -9,22 +9,11 @@ namespace CookSystem
     public class FoodItemData : MyScriptableObject
     {
         public string itemName;
-        public Color bgColor = Color.white;
+        public Sprite icon;
         public List<ToppingItemData> allowedToppings = new();
         public float price = 5;
-        [Header("Runtime Data")] public List<ToppingItemData> addedToppings = new();
-
-        public float GetTotalPrice() => price + addedToppings.Sum(topping => topping.price);
 
         private bool CanAddTopping(ToppingItemData topping) => allowedToppings.Contains(topping);
-
-        public bool TryAddTopping(ToppingItemData topping)
-        {
-            if (!CanAddTopping(topping))
-                return false;
-            addedToppings.Add(topping);
-            return true;
-        }
 
         protected override void OnValidate()
         {
