@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using Utilities;
 
-namespace ToastModal
+namespace Utilities.ToastModal
 {
     public class ToastSystem : SingletonMonoBehaviour<ToastSystem>
     {

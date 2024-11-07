@@ -1,6 +1,4 @@
-﻿using Utilities;
-
-namespace ToastModal
+﻿namespace Utilities.ToastModal
 {
     public class ToastPool : ObjectPoolingBase<Toast>
     {

@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ToastModal
+namespace Utilities.ToastModal
 {
     public class Toast : MonoBehaviour
     {

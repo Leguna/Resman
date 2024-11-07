@@ -2,7 +2,7 @@
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
-namespace SaveLoad
+namespace Utilities.SaveLoad
 {
     public static class SaveLoadSystem
     {

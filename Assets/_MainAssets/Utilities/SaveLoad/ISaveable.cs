@@ -1,4 +1,4 @@
-﻿namespace SaveLoad
+﻿namespace Utilities.SaveLoad
 {
     public interface ISaveable
     {

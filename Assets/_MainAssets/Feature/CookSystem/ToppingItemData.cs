@@ -1,5 +1,4 @@
 ﻿using System;
-using Core;
 using UnityEngine;
 
 namespace CookSystem
@@ -28,5 +27,11 @@ namespace CookSystem
                 Debug.LogError($"Validation Error in {name}: {e.Message}", this);
             }
         }
+
+        public void AddToFood(IToppingable foodItem)
+        {
+            foodItem.TryAddTopping(this);
+        }
     }
+
 }
