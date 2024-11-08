@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 namespace CookSystem
 {
+    [RequireComponent(typeof(AnimateScale))]
     public class Utensil : MonoBehaviour, IOnDoubleTap, ITouchable
     {
         [SerializeField] private Image progress;
@@ -14,19 +15,15 @@ namespace CookSystem
         [SerializeField] private SpriteRenderer utensilIcon;
         [SerializeField] private UtensilData utensilData;
 
+        [SerializeField] private AnimateScale animateScale;
+
         private IngredientComponent _cookedIngredientComponent;
 
         private bool _isCooking;
         private float _cookTime;
 
-        private AnimateScale _animateScale;
 
         private Action<FoodItemData, Utensil> _onServe;
-
-        private void Awake()
-        {
-            _animateScale = GetComponent<AnimateScale>();
-        }
 
         private void Update()
         {
@@ -37,6 +34,7 @@ namespace CookSystem
         public void Init(Action<FoodItemData, Utensil> onServe)
         {
             _onServe = onServe;
+            foodIcon.gameObject.SetActive(false);
             Reset();
         }
 
@@ -63,7 +61,7 @@ namespace CookSystem
             UpdateUI();
             foodIcon.gameObject.SetActive(true);
             progress.gameObject.SetActive(true);
-            _animateScale.PlayAnimation();
+            animateScale.PlayAnimation();
             return true;
         }
 
@@ -71,14 +69,14 @@ namespace CookSystem
         {
             progress.color = Color.red;
             UpdateUI();
-            _animateScale.PlayAnimation();
+            animateScale.PlayAnimation();
         }
 
         private void OnBurnt()
         {
             _isCooking = false;
             UpdateUI();
-            _animateScale.PlayAnimation();
+            animateScale.PlayAnimation();
         }
 
         private void UpdateUI()
@@ -99,7 +97,7 @@ namespace CookSystem
             progress.color = Color.green;
             _cookedIngredientComponent.Reset();
             _isCooking = true;
-            _animateScale.PlayAnimation();
+            animateScale.PlayAnimation();
         }
 
         public void RemoveIngredient()
@@ -109,7 +107,7 @@ namespace CookSystem
             foodIcon.gameObject.SetActive(false);
             Destroy(_cookedIngredientComponent);
             _cookedIngredientComponent = null;
-            _animateScale.PlayAnimation();
+            animateScale.PlayAnimation();
         }
 
         private void PutOut()

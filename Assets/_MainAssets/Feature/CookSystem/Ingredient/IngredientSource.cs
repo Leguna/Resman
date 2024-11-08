@@ -15,11 +15,11 @@ namespace CookSystem.Ingredient
             Init(ingredient);
         }
 
-        public void Init(IngredientData data)
+        private void Init(IngredientData data)
         {
             ingredient = data;
             icon.sprite = ingredient.rawIcon;
-            icon.gameObject.SetActive(true);
+            Hide();
         }
 
         private void AddToAvailableUtensil()
@@ -36,12 +36,12 @@ namespace CookSystem.Ingredient
         {
             AddToAvailableUtensil();
         }
-        
+
         public void Show()
         {
             icon.gameObject.SetActive(true);
         }
-        
+
         public void Hide()
         {
             icon.gameObject.SetActive(false);

@@ -1,5 +1,4 @@
 ﻿using CustomerSystem;
-using OrderSystem;
 using StageSystem;
 using Touch;
 using UnityEngine;
@@ -26,6 +25,8 @@ public class GameManager : DontDestroyThis
         _customerSpawner = FindObjectOfType<CustomerSpawner>();
         stageLoader = FindObjectOfType<StageLoader>();
         _stage = FindObjectOfType<Stage>();
+
+        stageLoader.ToggleStagePanel(true);
 
         _touchInput.enabled = false;
         stageLoader.onStageSelected = OnStageLoad;
@@ -89,7 +90,7 @@ public class GameManager : DontDestroyThis
         gameOver.Close();
         stageLoader.ToggleStagePanel(true);
         _customerSpawner.Reset();
-        _stage.Reset();
+        _stage.Init(null);
         _touchInput.enabled = false;
         gameSpeed = 0;
     }

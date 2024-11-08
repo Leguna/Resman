@@ -25,7 +25,7 @@ namespace CookSystem
             ingredientSources.ForEach(ingredientSource => { ingredientSource.Show(); });
         }
 
-        private void HideIngredientSources()
+        public void HideIngredientSources()
         {
             ingredientSources.ForEach(ingredientSource => { ingredientSource.Hide(); });
         }

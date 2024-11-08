@@ -290,7 +290,8 @@ MonoBehaviour:
   progress: {fileID: 6497477277675634146}
   foodIcon: {fileID: 6497477277472636263}
   utensilIcon: {fileID: 6497477277998682487}
-  utensilData: {fileID: 11400000, guid: a21c2399f0d22154ea1b48b4f54ee671, type: 2}
+  utensilData: {fileID: 0}
+  animateScale: {fileID: 1880822913063999875}
 --- !u!114 &1880822913063999875
 MonoBehaviour:
   m_ObjectHideFlags: 0

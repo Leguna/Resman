@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CookSystem;
+using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -53,16 +54,25 @@ namespace CustomerSystem
         {
             _customers.ForEach(customer => Destroy(customer.gameObject));
             _customers.Clear();
-            _spawnTimer.StartTimer(Random.Range(spawnInterval.min, spawnInterval.max));
         }
 
         public void Resume()
         {
+            foreach (var customer in _customers)
+            {
+                DOTween.Play(customer.transform);
+            }
+
             _spawnTimer.ResumeTimer();
         }
 
         public void Pause()
         {
+            foreach (var customer in _customers)
+            {
+                DOTween.Pause(customer.transform);
+            }
+
             _spawnTimer.PauseTimer();
         }
 

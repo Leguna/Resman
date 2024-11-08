@@ -26,6 +26,7 @@ namespace StageSystem
             stageState = StageState.Idle;
             _currentStageData = stageData;
             kitchenSystem.Init(OnPlateServe);
+            kitchenSystem.HideIngredientSources();
             onStageStateChanged?.Invoke(stageState);
             switch (stageData.completionCondition)
             {

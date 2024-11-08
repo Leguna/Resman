@@ -24,7 +24,6 @@ namespace StageSystem
         {
             base.Awake();
             _stages = LoadStageFromResources().ToList();
-            ToggleStagePanel(true);
         }
 
         public void ToggleStagePanel(bool? setActive = null)
@@ -46,16 +45,20 @@ namespace StageSystem
             {
                 var stage = Instantiate(stageItem, stagePanel.transform);
                 stage.GetComponentInChildren<TMP_Text>().text = stageData.name;
-                stage.onClick.AddListener(() =>
-                {
-                    onStageSelected?.Invoke(stageData);
-                    GameManager.gameSpeed = 1f;
-                    bg.SetActive(false);
-                    stagePanel.gameObject.SetActive(false);
-                });
+
+                stage.onClick.RemoveAllListeners();
+                stage.onClick.AddListener(() => LoadStage(stageData));
             }
 
             return stageDataList;
+        }
+
+        private void LoadStage(StageData stageData)
+        {
+            onStageSelected?.Invoke(stageData);
+            GameManager.gameSpeed = 1f;
+            bg.SetActive(false);
+            stagePanel.gameObject.SetActive(false);
         }
 
         private void OnEnable()
