@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OrderSystem;
 using UnityEngine;
 
 namespace CookSystem
 {
     [CreateAssetMenu(fileName = "FoodItem", menuName = "RestaurantGame/FoodItem")]
-    public class FoodItemData : MyScriptableObject
+    public class FoodItemData : MyScriptableObject, IOrderable
     {
         public string itemName;
         public Sprite icon;

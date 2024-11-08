@@ -1,6 +1,4 @@
-namespace Core
+public class GameResources
 {
-    public class GameResources
-    {
-    }
+    
 }

@@ -11,8 +11,8 @@ namespace StageSystem
     {
         public StageData currentStageData;
         public StageState stageState;
-        public Action<StageState> onStageChanged = delegate { };
-
+        public Action<StageState> onStageStateChanged = delegate { };
+        
         [SerializeField] private StageTimer stageTimer;
         [SerializeField] private CustomerCounter customerCounter;
         [SerializeField] private ObjectiveManager objectiveManager;
@@ -21,7 +21,7 @@ namespace StageSystem
         {
             currentStageData = stageData;
             stageState = StageState.Idle;
-            onStageChanged?.Invoke(stageState);
+            onStageStateChanged?.Invoke(stageState);
             objectiveManager.Init(stageData.objectiveData);
             objectiveManager.SetListener(() => { print("Objective Achieved"); });
             switch (stageData.completionCondition)
@@ -40,7 +40,7 @@ namespace StageSystem
         private void StageFinished()
         {
             stageState = StageState.Ended;
-            onStageChanged?.Invoke(stageState);
+            onStageStateChanged?.Invoke(stageState);
         }
 
         public void CustomerCounterIncrement() => customerCounter.IncrementCustomerCount();
@@ -52,21 +52,21 @@ namespace StageSystem
             stageState = StageState.Playing;
             stageTimer.StartTimer(currentStageData.duration);
             customerCounter.ResetCustomerCount();
-            onStageChanged?.Invoke(stageState);
+            onStageStateChanged?.Invoke(stageState);
         }
 
         public void Pause()
         {
             stageState = StageState.Paused;
             stageTimer.PauseTimer();
-            onStageChanged?.Invoke(stageState);
+            onStageStateChanged?.Invoke(stageState);
         }
 
         public void Resume()
         {
             stageState = StageState.Playing;
             stageTimer.ResumeTimer();
-            onStageChanged?.Invoke(stageState);
+            onStageStateChanged?.Invoke(stageState);
         }
 
         public static StageData LoadStageData(string path)

@@ -17,7 +17,7 @@ namespace CookSystem
         private void OnUtensilServe(FoodItemData foodItemData, Utensil utensil)
         {
             foreach (var foodPlate in foodPlates)
-                if (foodPlate.Receive(foodItemData))
+                if (foodPlate.TryReceive(foodItemData))
                 {
                     utensil.RemoveIngredient();
                     return;

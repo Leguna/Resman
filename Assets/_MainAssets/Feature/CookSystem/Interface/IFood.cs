@@ -1,17 +1,6 @@
 namespace CookSystem
 {
-    public interface IFood : IReceiver<FoodItemData>, IServable
+    public interface IFood : IReceive<FoodItemData>, ISend
     {
     }
-
-    public interface IReceiver<in T>
-    {
-        bool Receive(T item);
-    }
-
-    public interface IServable
-    {
-        void Serve();
-    }
-
 }

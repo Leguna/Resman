@@ -90,7 +90,7 @@ namespace CookSystem
 
         private void Cook()
         {
-            _cookedIngredientComponent.Cook(utensilData.GetCookSpeed() * Time.deltaTime * GameManager.GameSpeed);
+            _cookedIngredientComponent.Cook(utensilData.GetCookSpeed() * Time.deltaTime * GameManager.gameSpeed);
             progress.fillAmount = _cookedIngredientComponent.GetProgress();
         }
 

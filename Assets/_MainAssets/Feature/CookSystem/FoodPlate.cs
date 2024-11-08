@@ -17,7 +17,7 @@ namespace CookSystem
             _animate = GetComponent<IAnimate>();
         }
 
-        public void Serve()
+        public void Send()
         {
             if (_foodItemData == null) return;
             _foodItemData = null;
@@ -25,14 +25,19 @@ namespace CookSystem
             _animate.PlayAnimation();
         }
 
-        public bool Receive(FoodItemData item)
+        public bool TryReceive(FoodItemData item)
         {
-            if (_foodItemData != null) return false;
-            if (item != allowedFoodItemData) return false;
+            if (!CanReceive(item)) return false;
             _foodItemData = item;
             foodSpriteRenderer.gameObject.SetActive(true);
             UpdateUI();
             return true;
+        }
+
+        public bool CanReceive(FoodItemData item)
+        {
+            if (_foodItemData != null) return false;
+            return item == allowedFoodItemData;
         }
 
         private void UpdateUI()
@@ -49,7 +54,7 @@ namespace CookSystem
             _animate.PlayAnimation();
         }
 
-        public void OnTouch() => Serve();
+        public void OnTouch() => Send();
 
         public void OnDoubleTap() => RemoveFoodItem();
     }

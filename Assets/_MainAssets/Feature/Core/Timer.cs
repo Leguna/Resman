@@ -7,7 +7,7 @@ public class Timer : MonoBehaviour
     public event Action OnTimerEnded;
     private float _duration;
     private float _elapsedTime;
-    public bool isRunning;
+    [HideInInspector] public bool isRunning;
 
     private void StartTimer()
     {
@@ -33,7 +33,7 @@ public class Timer : MonoBehaviour
         _duration = duration;
     }
 
-    private void StopTimer()
+    public virtual void Stop()
     {
         isRunning = false;
         StopAllCoroutines();
@@ -51,22 +51,28 @@ public class Timer : MonoBehaviour
         StartCoroutine(TimerCoroutine());
     }
 
+    public void DecreaseElapsed(float time)
+    {
+        _elapsedTime -= time;
+        _elapsedTime = Mathf.Clamp(_elapsedTime, 0, _duration);
+    }
+
     public void ResetTimer()
     {
         _elapsedTime = 0;
         if (!isRunning) return;
-        StopTimer();
+        Stop();
         StartTimer(_duration);
     }
 
-    public float GetElapsedTime()
+    public float GetProgress()
     {
-        return _elapsedTime;
+        return Mathf.Clamp01(GetRemainingTime() / _duration);
     }
 
-    public float GetRemainingTime()
+    protected float GetRemainingTime()
     {
-        return _duration - _elapsedTime;
+        return Mathf.Clamp(_duration - _elapsedTime, 0, _duration);
     }
 
     private IEnumerator TimerCoroutine()

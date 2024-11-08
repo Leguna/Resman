@@ -1,0 +1,45 @@
+{
+    "name": "MainInputAction",
+    "maps": [
+        {
+            "name": "UI",
+            "id": "5a453d3c-73a7-4ad3-9ab1-bfe5664448cc",
+            "actions": [
+                {
+                    "name": "Menu",
+                    "type": "Button",
+                    "id": "e471955f-c2bf-4889-8cb1-772db003eb9e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "37b4c2fe-6e7a-4a3b-8920-3fae14b1f1bf",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a36c51ac-d7e4-4c38-9498-a34183d61d03",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
