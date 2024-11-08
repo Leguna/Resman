@@ -13,7 +13,6 @@ public class GameManager : DontDestroyThis
     public StageLoader stageLoader;
     public GameOver gameOver;
 
-
     public static float gameSpeed = 1;
 
     public static float GameDeltaTime => Time.deltaTime * gameSpeed;

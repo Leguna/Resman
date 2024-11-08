@@ -24,17 +24,19 @@ namespace StageSystem
         public void Init(StageData stageData)
         {
             stageState = StageState.Idle;
+            onStageStateChanged?.Invoke(stageState);
             _currentStageData = stageData;
             kitchenSystem.Init(OnPlateServe);
             kitchenSystem.HideIngredientSources();
-            onStageStateChanged?.Invoke(stageState);
+            objectiveManager.Init(stageData.goalData, StageFinished);
+            customerSpawner.Reset();
             switch (stageData.completionCondition)
             {
                 case CompletionType.Timed:
-                    stageTimer.Init(stageData.duration, onTimerEnd: StageFinished);
+                    stageTimer.Init(stageData.duration, StageFinished);
                     break;
                 case CompletionType.Customer:
-                    customerCounter.Init(stageData.customerLimit, onCustomerLimitReached: StageFinished);
+                    customerCounter.Init(stageData.customerLimit, StageFinished);
                     break;
             }
         }
@@ -47,8 +49,8 @@ namespace StageSystem
         private void StageFinished()
         {
             stageState = StageState.Ended;
-            onStageStateChanged?.Invoke(stageState);
             Pause();
+            onStageStateChanged?.Invoke(stageState);
         }
 
         public void Play()
@@ -57,7 +59,6 @@ namespace StageSystem
             stageTimer.StartTimer(_currentStageData.duration);
             kitchenSystem.ShowIngredientSources();
             customerCounter.ResetCustomerCount();
-            onStageStateChanged?.Invoke(stageState);
             customerSpawner.Init();
         }
 
@@ -65,7 +66,6 @@ namespace StageSystem
         {
             stageState = StageState.Paused;
             stageTimer.PauseTimer();
-            onStageStateChanged?.Invoke(stageState);
             customerSpawner.Pause();
         }
 
@@ -73,7 +73,6 @@ namespace StageSystem
         {
             stageState = StageState.Playing;
             stageTimer.ResumeTimer();
-            onStageStateChanged?.Invoke(stageState);
             customerSpawner.Resume();
         }
 

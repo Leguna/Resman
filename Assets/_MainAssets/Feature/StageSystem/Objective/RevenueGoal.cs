@@ -1,8 +1,7 @@
 using System;
 using Events;
-using StageSystem.Objective;
 
-namespace StageSystem.Completion
+namespace StageSystem.Objective
 {
     [Serializable]
     public class RevenueGoal : Goal

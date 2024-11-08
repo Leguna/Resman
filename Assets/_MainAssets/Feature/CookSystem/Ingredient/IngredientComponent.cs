@@ -16,6 +16,8 @@ namespace CookSystem.Ingredient
         public void Init(IngredientData data)
         {
             ingredient = data;
+            state = IngredientState.Raw;
+            currentCookTime = 0;
         }
 
         public void Cook(float cookTime)

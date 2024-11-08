@@ -24,6 +24,12 @@ namespace StageSystem
         {
             base.Awake();
             _stages = LoadStageFromResources().ToList();
+            _mainInputAction = new MainInputAction();
+        }
+
+        private void Start()
+        {
+            _mainInputAction.Disable();
         }
 
         public void ToggleStagePanel(bool? setActive = null)
@@ -55,6 +61,7 @@ namespace StageSystem
 
         private void LoadStage(StageData stageData)
         {
+            _mainInputAction.Enable();
             onStageSelected?.Invoke(stageData);
             GameManager.gameSpeed = 1f;
             bg.SetActive(false);
@@ -63,7 +70,6 @@ namespace StageSystem
 
         private void OnEnable()
         {
-            _mainInputAction = new MainInputAction();
             _mainInputAction.Enable();
             _mainInputAction.UI.Menu.performed += _ => { ToggleStagePanel(); };
         }

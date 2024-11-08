@@ -1,5 +1,4 @@
 using System;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,29 +7,26 @@ namespace StageSystem.Objective
 {
     public class ObjectiveManager : MonoBehaviour
     {
-        private Goal _goalData;
+        private Goal _goal;
 
         [SerializeField] private Image objectiveImage;
         [SerializeField] private TMP_Text objectiveText;
-
+        
         private Action _onObjectiveComplete = delegate { };
 
-        private void Awake()
+        public void Init(GoalData goalData, Action onObjectiveComplete)
         {
-            objectiveText.transform.parent.gameObject.SetActive(false);
-        }
-
-        public void Init(Goal goalData, Action onObjectiveComplete = null)
-        {
-            _goalData = goalData;
-            objectiveText.transform.parent.gameObject.SetActive(false);
+            return;
+            _goal.goalData = goalData;
             _onObjectiveComplete = onObjectiveComplete;
+            objectiveText.transform.parent.gameObject.SetActive(true);
             UpdateObjectiveUI();
         }
 
         private void UpdateObjectiveUI()
         {
-            objectiveImage.DOFillAmount(_goalData.goalData.currentAmount, 0.5f);
+            objectiveText.text = _goal.goalData.GetObjectiveDescription();
+            objectiveImage.fillAmount = _goal.goalData.GetProgress();
         }
     }
 }
