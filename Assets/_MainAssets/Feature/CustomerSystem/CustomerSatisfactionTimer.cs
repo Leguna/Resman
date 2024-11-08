@@ -10,6 +10,8 @@ namespace CustomerSystem
         [SerializeField] private Image progressBar;
         [SerializeField] private Canvas canvas;
 
+        private bool _isDispleased;
+
         private void Awake()
         {
             canvas.worldCamera = Camera.main;
@@ -32,9 +34,10 @@ namespace CustomerSystem
         {
             if (!isRunning) return;
             progressBar.fillAmount = GetProgress();
-            if (GetProgress() <= 0.3f && GetProgress() > 0.2f)
+            if (GetProgress() <= 0.3f && GetProgress() > 0.2f && !_isDispleased)
             {
-                progressBar.DOColor(Color.red, 1f);
+                _isDispleased = true;
+                progressBar.DOColor(Color.red, 0.2f);
             }
         }
 
@@ -47,6 +50,7 @@ namespace CustomerSystem
         public override void Stop()
         {
             base.Stop();
+            DOTween.Kill(progressBar);
             canvas.gameObject.SetActive(false);
         }
     }

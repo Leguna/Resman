@@ -1,3 +1,4 @@
+using System;
 using Animation;
 using Touch;
 using UnityEngine;
@@ -11,15 +12,29 @@ namespace CookSystem
         [SerializeField] private FoodItemData allowedFoodItemData;
         [SerializeField] private SpriteRenderer foodSpriteRenderer;
 
-        [SerializeField]
+        private Action<FoodItemData, FoodPlate> _onPlateServe;
+
         private void Awake()
         {
             _animate = GetComponent<IAnimate>();
         }
 
-        public void Send()
+        public void Init(Action<FoodItemData, FoodPlate> onPlateServe)
+        {
+            _foodItemData = null;
+            _onPlateServe = onPlateServe;
+            foodSpriteRenderer.gameObject.SetActive(false);
+        }
+
+        public void TrySend()
         {
             if (_foodItemData == null) return;
+            _onPlateServe?.Invoke(_foodItemData, this);
+        }
+
+
+        public void RemoveFood()
+        {
             _foodItemData = null;
             foodSpriteRenderer.gameObject.SetActive(false);
             _animate.PlayAnimation();
@@ -54,7 +69,7 @@ namespace CookSystem
             _animate.PlayAnimation();
         }
 
-        public void OnTouch() => Send();
+        public void OnTouch() => TrySend();
 
         public void OnDoubleTap() => RemoveFoodItem();
     }

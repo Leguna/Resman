@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Touch
 {
-    public class Touch : MonoBehaviour
+    public class TouchInput : MonoBehaviour
     {
         private TouchInputAction _touchInputAction;
         private Camera _camera;

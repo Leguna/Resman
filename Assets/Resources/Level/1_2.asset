@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: 1_2
   m_EditorClassIdentifier: 
   id: 5156344d-3b49-45cf-b65f-6170ff5a19e9
-  objectiveData:
-    targetAmount: 5
+  goalData:
+    targetAmount: 2
     currentAmount: 0
-    objectiveType: 1
+    goalType: 1
   completionCondition: 1
-  customerLimit: 6
+  customerLimit: 10
   duration: 0

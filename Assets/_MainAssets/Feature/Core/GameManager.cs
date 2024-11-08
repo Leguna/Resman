@@ -1,57 +1,96 @@
-﻿using StageSystem;
+﻿using CustomerSystem;
+using OrderSystem;
+using StageSystem;
+using Touch;
 using UnityEngine;
 using Utilities;
 
-public class GameManager : SingletonMonoBehaviour<GameManager>
+public class GameManager : DontDestroyThis
 {
-    public Stage stage;
-    public CustomerQueue customerQueue;
+    private Stage _stage;
+    private CustomerSpawner _customerSpawner;
+    private TouchInput _touchInput;
+
     public StageLoader stageLoader;
+    public GameOver gameOver;
+
 
     public static float gameSpeed = 1;
-    
+
     public static float GameDeltaTime => Time.deltaTime * gameSpeed;
 
     protected override void Awake()
     {
         base.Awake();
-        stage = Stage.Instance;
-        customerQueue = FindObjectOfType<CustomerQueue>();
+        _touchInput = FindObjectOfType<TouchInput>();
+        _customerSpawner = FindObjectOfType<CustomerSpawner>();
         stageLoader = FindObjectOfType<StageLoader>();
+        _stage = FindObjectOfType<Stage>();
+
+        _touchInput.enabled = false;
         stageLoader.onStageSelected = OnStageLoad;
+        stageLoader.onPause = OnPause;
+        stageLoader.onResume = OnResume;
+        gameOver.onRestart = OnRestart;
+        gameOver.onOpenMenu = OnOpenMenu;
+    }
+
+    private void OnResume()
+    {
+        gameSpeed = 1;
+        _stage.Resume();
+        _touchInput.enabled = true;
+        _customerSpawner.Resume();
+    }
+
+    private void OnPause()
+    {
+        gameSpeed = 0;
+        _touchInput.enabled = false;
+        _stage.Pause();
+        _customerSpawner.Pause();
     }
 
     private void OnStageLoad(StageData stageData)
     {
-        stage.Init(stageData);
-        stage.onStageStateChanged = state => { print($"Stage State: {state}"); };
-        stage.Play();
+        _stage.Init(stageData);
+        _stage.onStageStateChanged = StageOnStageStateChanged;
+        _stage.Play();
+        _touchInput.enabled = true;
     }
 
-    private void Start()
+    private void StageOnStageStateChanged(StageState state)
     {
+        if (state != StageState.Ended) return;
+        OnGameOver();
     }
 
-
-    public void OnGUI()
+    private void OnRestart()
     {
-        // if (GUI.Button(new Rect(10, 10, 120, 40), "Load Stage"))
-        // {
-        //     stageManager.Init(stageData);
-        //     stageManager.onStageChanged = state => { print($"Stage State: {state}"); };
-        //     stageManager.Play();
-        // }
-        //
-        // // Add Customer
-        // if (GUI.Button(new Rect(10, 60, 120, 40), "Add Customer"))
-        // {
-        //     stageManager.CustomerCounterIncrement();
-        // }
-        //
-        // // Add objective
-        // if (GUI.Button(new Rect(10, 110, 120, 40), "Add Objective"))
-        // {
-        //     stageManager.ObjectiveUpdate(10);
-        // }
+        _customerSpawner.Restart();
+        _stage.Restart();
+        gameOver.Close();
+        gameSpeed = 1;
+        _touchInput.enabled = true;
+    }
+
+    private void OnGameOver()
+    {
+        gameOver.Open();
+        _customerSpawner.Reset();
+        stageLoader.enabled = false;
+        _stage.Reset();
+        _touchInput.enabled = false;
+        gameSpeed = 0;
+    }
+
+    private void OnOpenMenu()
+    {
+        gameOver.Close();
+        stageLoader.ToggleStagePanel(true);
+        _customerSpawner.Reset();
+        _stage.Reset();
+        _touchInput.enabled = false;
+        gameSpeed = 0;
     }
 }

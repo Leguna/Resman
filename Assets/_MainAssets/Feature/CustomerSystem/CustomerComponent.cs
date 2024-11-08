@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace CustomerSystem
 {
-    public class CustomerComponent : MonoBehaviour, IReceive<FoodItemData>
+    public class CustomerComponent : MonoBehaviour
     {
         [SerializeField] private Order order;
         [SerializeField] private SpriteRenderer foodSprite;
@@ -20,23 +20,11 @@ namespace CustomerSystem
 
         [SerializeField] private List<FoodItemData> allowedFoodItemData = new();
 
-        private Action _onLeave;
+        private Action<CustomerComponent> _onLeave;
 
-        private void Start()
+        public void Init(CustomerData customerData, Action<CustomerComponent> onLeave)
         {
-            Init();
-        }
-
-        private void OnGUI()
-        {
-            if (GUI.Button(new Rect(10, 10, 100, 40), "Receive Food"))
-            {
-                order.TryReceive(allowedFoodItemData.FirstOrDefault());
-            }
-        }
-
-        private void Init(Action onLeave = null)
-        {
+            this.customerData = customerData;
             _onLeave = onLeave;
             customerSprite.sprite = customerData.customerSprite;
             EnterQueue();
@@ -49,9 +37,8 @@ namespace CustomerSystem
         }
 
 
-        private void Pay(float objPrice)
+        private void RequestPay(float objPrice)
         {
-            print("CustomerComponent: Paying " + objPrice);
             satisfactionTimer.Stop();
             Leave();
         }
@@ -59,7 +46,7 @@ namespace CustomerSystem
         private void EnterQueue()
         {
             transform.position = new Vector3(-15, 0, 0);
-            transform.DOMoveX(0, 2f).OnComplete(() =>
+            transform.DOLocalMoveX(0, 2f).OnComplete(() =>
             {
                 GenerateRandomOrder();
                 satisfactionTimer.Init(customerData.patience, Leave);
@@ -70,46 +57,32 @@ namespace CustomerSystem
         private void UpdateUI()
         {
             foodSprite.gameObject.SetActive(true);
-            // Need handle multiple food items
-            if (!order?.IsOrderComplete ?? false)
-            {
-                foodSprite.sprite = order.GetNextFoodItem().icon;
-                foodSprite.transform.parent.gameObject.SetActive(true);
-                foodSprite.gameObject.SetActive(true);
-            }
+            if (!(!order?.IsOrderComplete ?? false)) return;
+            foodSprite.sprite = order.GetNextFoodItem().icon;
+            foodSprite.transform.parent.gameObject.SetActive(true);
+            foodSprite.gameObject.SetActive(true);
         }
 
         private void OnOrderComplete(List<FoodItemData> obj)
         {
-            print("CustomerComponent: Order Complete");
-            Pay(obj.Sum(foodItemData => foodItemData.price));
+            RequestPay(obj.Sum(foodItemData => foodItemData.price));
         }
 
         private void OnOrderFulfilled(FoodItemData obj)
         {
-            print("CustomerComponent: Order " + obj + " fulfilled");
         }
 
         private void Leave()
         {
             CloseOrder();
-            transform.DOMoveX(15, 2f).OnComplete(() =>
-            {
-                _onLeave?.Invoke();
-                Destroy(gameObject);
-            });
+            transform.DOLocalMoveX(15, 2f).OnComplete(() => { _onLeave?.Invoke(this); });
         }
 
         public bool TryReceive(FoodItemData item)
         {
             if (!allowedFoodItemData.Contains(item)) return false;
-            order.TryReceive(item);
-            return true;
-        }
-
-        public bool CanReceive(FoodItemData item)
-        {
-            return order != null && order.CanReceive(item);
+            if (order == null) return false;
+            return order.TryReceive(item);
         }
 
         private void CloseOrder()
@@ -125,7 +98,7 @@ namespace CustomerSystem
             foreach (var foodItem in foodItemData) allowedFoodItemData.Add(foodItem);
         }
 
-        public void GenerateRandomOrder()
+        private void GenerateRandomOrder()
         {
             var randomOrder = new List<FoodItemData>
             {
@@ -133,6 +106,11 @@ namespace CustomerSystem
             };
 
             SetOrder(new Order(randomOrder, OnOrderComplete, OnOrderFulfilled));
+        }
+
+        private void OnDisable()
+        {
+            DOTween.Kill(transform);
         }
     }
 }

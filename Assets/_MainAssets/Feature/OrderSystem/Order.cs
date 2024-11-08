@@ -5,13 +5,12 @@ using CookSystem;
 namespace OrderSystem
 {
     [Serializable]
-    public class Order : IReceive<FoodItemData>
+    public class Order
     {
-        private List<FoodItemData> foodItemData = new();
+        private List<FoodItemData> _orderedFood = new();
         public List<FoodItemData> allOrders = new();
 
-        public bool IsOrderComplete => foodItemData.Count == 0;
-        public bool CanReceive(FoodItemData item) => foodItemData.Contains(item);
+        public bool IsOrderComplete => _orderedFood.Count == 0;
 
         public Action<List<FoodItemData>> onOrderComplete;
         public Action<FoodItemData> onOrderFulfilled;
@@ -20,7 +19,7 @@ namespace OrderSystem
             Action<FoodItemData> onOrderFulfilled = null)
         {
             allOrders.AddRange(order);
-            foodItemData.AddRange(order);
+            _orderedFood.AddRange(order);
             this.onOrderComplete = onOrderComplete;
             this.onOrderFulfilled = onOrderFulfilled;
         }
@@ -28,10 +27,15 @@ namespace OrderSystem
         public bool TryReceive(FoodItemData item)
         {
             if (!CanReceive(item)) return false;
-            foodItemData.Remove(item);
+            _orderedFood.Remove(item);
             onOrderFulfilled?.Invoke(item);
             CheckOrder();
             return true;
+        }
+
+        private bool CanReceive(FoodItemData item)
+        {
+            return _orderedFood != null && _orderedFood.Contains(item);
         }
 
         private void CheckOrder()
@@ -44,14 +48,12 @@ namespace OrderSystem
         public void CloseOrder()
         {
             allOrders.Clear();
-            foodItemData.Clear();
-            onOrderComplete = null;
-            onOrderFulfilled = null;
+            _orderedFood.Clear();
         }
-        
+
         public FoodItemData GetNextFoodItem()
         {
-            return foodItemData[0];
+            return _orderedFood[0];
         }
     }
 }

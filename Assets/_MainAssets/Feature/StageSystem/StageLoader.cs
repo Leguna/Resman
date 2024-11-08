@@ -1,56 +1,73 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using StageSystem;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Utilities;
 
-public class StageLoader : DontDestroyThis
+namespace StageSystem
 {
-    private List<StageData> _stages;
-    [SerializeField] private RectTransform stagePanel;
-
-    private MainInputAction _mainInputAction;
-
-    public Action<StageData> onStageSelected = delegate { };
-
-    private void OnEnable()
+    public class StageLoader : DontDestroyThis
     {
-        _mainInputAction = new MainInputAction();
-        _mainInputAction.Enable();
-        _mainInputAction.UI.Menu.performed += ctx => { ToggleStagePanel(); };
-    }
+        private List<StageData> _stages;
+        [SerializeField] private GameObject stagePanel;
+        [SerializeField] private GameObject bg;
 
-    private void ToggleStagePanel()
-    {
-        stagePanel.gameObject.SetActive(!stagePanel.gameObject.activeSelf);
-    }
+        private MainInputAction _mainInputAction;
 
-    private void OnDisable()
-    {
-        _mainInputAction.Disable();
-    }
+        public Action<StageData> onStageSelected = delegate { };
+        public Action onPause;
+        public Action onResume;
 
-    protected override void Awake()
-    {
-        _stages = LoadStageFromResources().ToList();
-    }
-
-    private StageData[] LoadStageFromResources()
-    {
-        var stageDataList = Resources.LoadAll<StageData>(MyResource.levelResourcePath);
-        var stageItem = Resources.Load<Button>(MyResource.stageItemResourcePath);
-        foreach (var stageData in stageDataList)
+        protected override void Awake()
         {
-            var stage = Instantiate(stageItem, stagePanel);
-            stage.onClick.AddListener(() =>
-            {
-                onStageSelected?.Invoke(stageData);
-                GameManager.gameSpeed = 1.2f;
-            });
+            base.Awake();
+            _stages = LoadStageFromResources().ToList();
+            ToggleStagePanel(true);
         }
 
-        return stageDataList;
+        public void ToggleStagePanel(bool? setActive = null)
+        {
+            var isActivated = setActive ?? !stagePanel.activeSelf;
+            stagePanel.SetActive(isActivated);
+            bg.SetActive(isActivated);
+
+            GameManager.gameSpeed = isActivated ? 0 : 1;
+            if (isActivated) onPause?.Invoke();
+            else onResume?.Invoke();
+        }
+
+        private StageData[] LoadStageFromResources()
+        {
+            var stageDataList = Resources.LoadAll<StageData>(MyResource.levelResourcePath);
+            var stageItem = Resources.Load<Button>(MyResource.stageItemResourcePath);
+            foreach (var stageData in stageDataList)
+            {
+                var stage = Instantiate(stageItem, stagePanel.transform);
+                stage.GetComponentInChildren<TMP_Text>().text = stageData.name;
+                stage.onClick.AddListener(() =>
+                {
+                    onStageSelected?.Invoke(stageData);
+                    GameManager.gameSpeed = 1f;
+                    bg.SetActive(false);
+                    stagePanel.gameObject.SetActive(false);
+                });
+            }
+
+            return stageDataList;
+        }
+
+        private void OnEnable()
+        {
+            _mainInputAction = new MainInputAction();
+            _mainInputAction.Enable();
+            _mainInputAction.UI.Menu.performed += _ => { ToggleStagePanel(); };
+        }
+
+        private void OnDisable()
+        {
+            _mainInputAction?.Disable();
+        }
     }
 }

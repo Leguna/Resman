@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using CookSystem.Ingredient;
 using UnityEngine;
 using Utilities;
 
@@ -8,20 +11,29 @@ namespace CookSystem
     {
         [SerializeField] private List<FoodPlate> foodPlates;
         [SerializeField] private List<Utensil> utensils;
+        [SerializeField] private List<IngredientSource> ingredientSources;
 
-        protected override void Awake()
+        public void Init(Action<FoodItemData, FoodPlate> onPlateServe = null)
         {
-            foreach (var utensil in utensils) utensil.onServe += OnUtensilServe;
+            HideIngredientSources();
+            foodPlates.ForEach(foodPlate => { foodPlate.Init(onPlateServe); });
+            utensils.ForEach(utensil => { utensil.Init(OnUtensilServe); });
+        }
+
+        public void ShowIngredientSources()
+        {
+            ingredientSources.ForEach(ingredientSource => { ingredientSource.Show(); });
+        }
+
+        private void HideIngredientSources()
+        {
+            ingredientSources.ForEach(ingredientSource => { ingredientSource.Hide(); });
         }
 
         private void OnUtensilServe(FoodItemData foodItemData, Utensil utensil)
         {
-            foreach (var foodPlate in foodPlates)
-                if (foodPlate.TryReceive(foodItemData))
-                {
-                    utensil.RemoveIngredient();
-                    return;
-                }
+            if (!foodPlates.Any(foodPlate => foodPlate.TryReceive(foodItemData))) return;
+            utensil.RemoveIngredient();
         }
     }
 }

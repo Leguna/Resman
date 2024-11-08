@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using CookSystem;
+using CustomerSystem;
 using StageSystem.Completion;
 using StageSystem.Objective;
 using UnityEngine;
@@ -9,21 +10,23 @@ namespace StageSystem
 {
     public class Stage : SingletonMonoBehaviour<Stage>
     {
-        public StageData currentStageData;
+        private StageData _currentStageData;
         public StageState stageState;
         public Action<StageState> onStageStateChanged = delegate { };
-        
+        [SerializeField] private KitchenSystem kitchenSystem;
+        [SerializeField] private CustomerSpawner customerSpawner;
+
+        // TODO: Need Optimize
         [SerializeField] private StageTimer stageTimer;
         [SerializeField] private CustomerCounter customerCounter;
         [SerializeField] private ObjectiveManager objectiveManager;
 
         public void Init(StageData stageData)
         {
-            currentStageData = stageData;
             stageState = StageState.Idle;
+            _currentStageData = stageData;
+            kitchenSystem.Init(OnPlateServe);
             onStageStateChanged?.Invoke(stageState);
-            objectiveManager.Init(stageData.objectiveData);
-            objectiveManager.SetListener(() => { print("Objective Achieved"); });
             switch (stageData.completionCondition)
             {
                 case CompletionType.Timed:
@@ -32,27 +35,29 @@ namespace StageSystem
                 case CompletionType.Customer:
                     customerCounter.Init(stageData.customerLimit, onCustomerLimitReached: StageFinished);
                     break;
-                default:
-                    throw new Exception("Invalid completion condition");
             }
+        }
+
+        private void OnPlateServe(FoodItemData foodItemData, FoodPlate foodPlate)
+        {
+            customerSpawner.OnPlateServe(foodItemData, foodPlate);
         }
 
         private void StageFinished()
         {
             stageState = StageState.Ended;
             onStageStateChanged?.Invoke(stageState);
+            Pause();
         }
-
-        public void CustomerCounterIncrement() => customerCounter.IncrementCustomerCount();
-
-        public void ObjectiveUpdate(float amount) => objectiveManager.UpdateObjective(amount);
 
         public void Play()
         {
             stageState = StageState.Playing;
-            stageTimer.StartTimer(currentStageData.duration);
+            stageTimer.StartTimer(_currentStageData.duration);
+            kitchenSystem.ShowIngredientSources();
             customerCounter.ResetCustomerCount();
             onStageStateChanged?.Invoke(stageState);
+            customerSpawner.Init();
         }
 
         public void Pause()
@@ -60,6 +65,7 @@ namespace StageSystem
             stageState = StageState.Paused;
             stageTimer.PauseTimer();
             onStageStateChanged?.Invoke(stageState);
+            customerSpawner.Pause();
         }
 
         public void Resume()
@@ -67,19 +73,16 @@ namespace StageSystem
             stageState = StageState.Playing;
             stageTimer.ResumeTimer();
             onStageStateChanged?.Invoke(stageState);
+            customerSpawner.Resume();
         }
 
-        public static StageData LoadStageData(string path)
+        public void Restart()
         {
-            var stageData = Resources.Load<StageData>(path);
-            return stageData;
+            Reset();
+            Play();
         }
 
-        public static List<StageData> GetAllInFolder(string stageName)
-        {
-            var stageData = Resources.LoadAll<StageData>($"Level/{stageName}");
-            return new List<StageData>(stageData);
-        }
+        public void Reset() => Init(_currentStageData);
     }
 
     public enum StageState

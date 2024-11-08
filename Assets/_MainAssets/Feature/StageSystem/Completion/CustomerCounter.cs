@@ -31,7 +31,7 @@ namespace StageSystem.Completion
             _customerCount++;
             customerCountText.text = $"{_customerLimit - _customerCount}";
             if (!IsCustomerLimitReached) return;
-            customerCountText.text = $"Closed";
+            customerCountText.text = "Closed";
             _onCustomerLimitReached?.Invoke();
         }
 

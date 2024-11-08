@@ -6,5 +6,5 @@ public interface IReceive<in T>
 
 public interface ISend
 {
-    void Send();
+    void TrySend();
 }

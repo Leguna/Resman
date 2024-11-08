@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
-    public event Action OnTimerEnded;
+    public Action onTimerEnded;
     private float _duration;
     private float _elapsedTime;
     [HideInInspector] public bool isRunning;
@@ -19,7 +19,7 @@ public class Timer : MonoBehaviour
 
     protected void SetListener(Action onEnd)
     {
-        OnTimerEnded = onEnd;
+        onTimerEnded = onEnd;
     }
 
     public void StartTimer(float duration)
@@ -85,6 +85,6 @@ public class Timer : MonoBehaviour
 
         if (!(_elapsedTime >= _duration)) yield break;
         isRunning = false;
-        OnTimerEnded?.Invoke();
+        onTimerEnded?.Invoke();
     }
 }

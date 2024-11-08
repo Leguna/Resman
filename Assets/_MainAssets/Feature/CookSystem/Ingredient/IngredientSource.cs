@@ -10,7 +10,7 @@ namespace CookSystem.Ingredient
         [SerializeField] private List<Utensil> utensils;
         [SerializeField] private IngredientData ingredient;
 
-        private void Start()
+        private void Awake()
         {
             Init(ingredient);
         }
@@ -36,6 +36,15 @@ namespace CookSystem.Ingredient
         {
             AddToAvailableUtensil();
         }
+        
+        public void Show()
+        {
+            icon.gameObject.SetActive(true);
+        }
+        
+        public void Hide()
+        {
+            icon.gameObject.SetActive(false);
+        }
     }
-
 }

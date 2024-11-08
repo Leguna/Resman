@@ -7,16 +7,11 @@ namespace StageSystem
     [CreateAssetMenu(fileName = "StageData", menuName = "StageSystem/StageData")]
     public class StageData : MyScriptableObject
     {
-        public ObjectiveData objectiveData;
+        public GoalData goalData;
         public CompletionType completionCondition;
 
         public int customerLimit = 5;
         public float duration = 60f;
-
-        public void UpdateObjective(float amount)
-        {
-            objectiveData.UpdateObjective(amount);
-        }
 
         protected override void OnValidate()
         {

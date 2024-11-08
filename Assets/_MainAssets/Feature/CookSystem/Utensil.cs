@@ -21,12 +21,11 @@ namespace CookSystem
 
         private AnimateScale _animateScale;
 
-        public Action<FoodItemData, Utensil> onServe;
+        private Action<FoodItemData, Utensil> _onServe;
 
         private void Awake()
         {
             _animateScale = GetComponent<AnimateScale>();
-            Init(utensilData);
         }
 
         private void Update()
@@ -35,9 +34,9 @@ namespace CookSystem
             Cook();
         }
 
-        private void Init(UtensilData data)
+        public void Init(Action<FoodItemData, Utensil> onServe)
         {
-            utensilData = data;
+            _onServe = onServe;
             Reset();
         }
 
@@ -117,7 +116,7 @@ namespace CookSystem
         {
             if (_cookedIngredientComponent == null) return;
             if (_cookedIngredientComponent.state != IngredientState.Done) return;
-            onServe?.Invoke(_cookedIngredientComponent.GetFoodItemData(), this);
+            _onServe?.Invoke(_cookedIngredientComponent.GetFoodItemData(), this);
         }
 
         private void TrashBurnt()
