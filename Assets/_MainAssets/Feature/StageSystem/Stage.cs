@@ -94,12 +94,15 @@ namespace StageSystem
 
         private void OnPaymentReceived(int payment)
         {
+            var comboBonus = Mathf.RoundToInt(2 * comboSystem.GetComboCount());
             comboSystem.AddCombo();
-            _stageGold.Add(payment);
+            var totalPayment = payment + comboBonus;
+            _stageGold.Add(totalPayment);
+
             var paymentEvent = new AddObjectiveEvent
             {
                 GoalType = GoalType.RevenueGoal,
-                Amount = payment
+                Amount = totalPayment
             };
             var serveEvent = new AddObjectiveEvent
             {

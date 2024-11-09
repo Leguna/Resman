@@ -72,7 +72,7 @@ namespace Combo
             _timer.Resume();
         }
 
-        public float GetComboCount()
+        public int GetComboCount()
         {
             return _comboCount;
         }
