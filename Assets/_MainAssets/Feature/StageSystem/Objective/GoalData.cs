@@ -12,7 +12,7 @@ namespace StageSystem.Objective
         public GoalType goalType = GoalType.RevenueGoal;
         public string GetObjectiveDescription() => $"Achieve {targetAmount} in {goalType}";
         public void UpdateObjective(float amount) => currentAmount += amount;
-        
+
         public void SetObjective(float amount) => currentAmount = amount;
 
         public void ResetObjective() => currentAmount = 0;
@@ -35,6 +35,32 @@ namespace StageSystem.Objective
                     return string.Empty;
             }
         }
+
+        public ObjectiveResult GetResult()
+        {
+            if (currentAmount >= targetAmount)
+            {
+                return new ObjectiveResult
+                {
+                    title = "Objective Completed",
+                    content = $"You have completed the {goalType} objective",
+                };
+            }
+
+            return new ObjectiveResult
+            {
+                title = "Objective Failed",
+                content = $"You have failed the {goalType} objective",
+            };
+        }
+        
+        public bool IsCompleted() => currentAmount >= targetAmount;
+    }
+
+    public struct ObjectiveResult
+    {
+        public string title;
+        public string content;
     }
 
     [Serializable]

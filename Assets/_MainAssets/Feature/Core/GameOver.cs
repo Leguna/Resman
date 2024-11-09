@@ -10,6 +10,7 @@ public class GameOver : MonoBehaviour
     [SerializeField] private Button restartButton;
     [SerializeField] private Button quitButton;
     [SerializeField] private Button mainMenuButton;
+    [SerializeField] private TMP_Text title;
     [SerializeField] private TMP_Text textFinish;
 
     public Action onRestart = delegate { };
@@ -26,10 +27,10 @@ public class GameOver : MonoBehaviour
         mainMenuButton.onClick.AddListener(() => onOpenMenu?.Invoke());
     }
 
-
-    public void SetTextFinish(string text)
+    public void SetTextFinish(string title, string content)
     {
-        textFinish.text = text;
+        this.title.text = title;
+        textFinish.text = content;
     }
 
 

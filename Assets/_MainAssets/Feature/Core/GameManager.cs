@@ -1,6 +1,7 @@
 ﻿using Currency;
 using CustomerSystem;
 using StageSystem;
+using StageSystem.Objective;
 using Touch;
 using UnityEngine;
 using Utilities;
@@ -15,6 +16,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     public StageLoader stageLoader;
     public GameOver gameOver;
+    public ObjectiveManager objectiveManager;
 
     public static float gameSpeed = 1;
 
@@ -28,6 +30,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         _customerSpawner = FindObjectOfType<CustomerSpawner>();
         stageLoader = FindObjectOfType<StageLoader>();
         _stage = FindObjectOfType<Stage>();
+        objectiveManager = FindObjectOfType<ObjectiveManager>();
 
         stageLoader.ToggleStagePanel(true);
         _stage.onPaymentReceived = OnPaymentReceived;
@@ -42,6 +45,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     private void OnPaymentReceived(Gold payment)
     {
+        if (!objectiveManager.IsCompleted()) return;
         gold.Add(payment.value);
     }
 
@@ -78,6 +82,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     private void OnRestart()
     {
+        stageLoader.EnableKeyboard();
         _customerSpawner.Restart();
         _stage.Restart();
         gameOver.Close();
@@ -88,6 +93,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private void OnGameOver()
     {
         SaveLoadSystem.Save(gold);
+        var result = objectiveManager.GetObjectiveResult();
+        gameOver.SetTextFinish(result.title, result.content);
         gameOver.Open();
         _customerSpawner.Reset();
         stageLoader.enabled = false;
@@ -100,6 +107,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         gameOver.Close();
         stageLoader.ToggleStagePanel(true);
+        stageLoader.DisableKeyboard();
         _customerSpawner.Reset();
         _stage.Init(null);
         _touchInput.enabled = false;

@@ -728,6 +728,7 @@ MonoBehaviour:
   restartButton: {fileID: 169416866}
   quitButton: {fileID: 148627218}
   mainMenuButton: {fileID: 271748156}
+  title: {fileID: 1217486659}
   textFinish: {fileID: 1472274155}
 --- !u!1 &235549786
 GameObject:
@@ -2579,7 +2580,7 @@ GameObject:
   - component: {fileID: 1217486660}
   - component: {fileID: 1217486659}
   m_Layer: 5
-  m_Name: GameOverText
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3437,7 +3438,7 @@ GameObject:
   - component: {fileID: 1472274156}
   - component: {fileID: 1472274155}
   m_Layer: 5
-  m_Name: ObjectiveText
+  m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4562,6 +4563,7 @@ MonoBehaviour:
     value: 0
   stageLoader: {fileID: 1923720143}
   gameOver: {fileID: 224167161}
+  objectiveManager: {fileID: 0}
 --- !u!114 &1923720141
 MonoBehaviour:
   m_ObjectHideFlags: 0

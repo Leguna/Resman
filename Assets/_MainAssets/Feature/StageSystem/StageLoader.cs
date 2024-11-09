@@ -76,5 +76,15 @@ namespace StageSystem
         {
             _mainInputAction?.Disable();
         }
+
+        public void DisableKeyboard()
+        {
+            _mainInputAction?.Disable();
+        }
+
+        public void EnableKeyboard()
+        {
+            _mainInputAction?.Enable();
+        }
     }
 }

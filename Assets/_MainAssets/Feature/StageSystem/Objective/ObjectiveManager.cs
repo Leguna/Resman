@@ -81,5 +81,15 @@ namespace StageSystem.Objective
 
             UpdateObjectiveUI();
         }
+
+        public ObjectiveResult GetObjectiveResult()
+        {
+            return _goalData.GetResult();
+        }
+
+        public bool IsCompleted()
+        {
+            return _goalData.IsCompleted();
+        }
     }
 }
