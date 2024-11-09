@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57c09d70944c4b9ba1b5840d2be38b23, type: 3}
-  m_Name: Beras
+  m_Name: BahanGreenGrapes
   m_EditorClassIdentifier: 
   id: da7fa3b8-f39b-4c61-977c-3b2273b0f59d
   ingredientName: Beras

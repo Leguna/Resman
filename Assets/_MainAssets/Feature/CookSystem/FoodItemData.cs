@@ -14,7 +14,7 @@ namespace CookSystem
         public List<ToppingItemData> allowedToppings = new();
         public int price = 5;
 
-        private bool CanAddTopping(ToppingItemData topping) => allowedToppings.Contains(topping);
+        public bool IsThisToppingAllowed(ToppingItemData topping) => allowedToppings.Contains(topping);
 
         protected override void OnValidate()
         {

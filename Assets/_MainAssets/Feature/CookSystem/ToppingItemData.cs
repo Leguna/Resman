@@ -8,7 +8,8 @@ namespace CookSystem
     {
         public string toppingName;
         public Color bgColor = Color.white;
-        public float price = 2;
+        public Sprite icon;
+        public int price = 2;
 
         protected override void OnValidate()
         {

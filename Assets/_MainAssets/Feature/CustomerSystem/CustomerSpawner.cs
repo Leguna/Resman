@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CookSystem;
+using CustomerSystem.OrderSystem;
 using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -112,13 +113,15 @@ namespace CustomerSystem
             return customerPositions.Find(position => position.childCount == 0);
         }
 
-        public void OnPlateServe(FoodItemData foodItemData, FoodPlate foodPlate)
+        public void OnPlateServe(FoodPlate foodPlate)
         {
             foreach (var customer in _customers)
             {
-                if (!customer.TryReceive(foodItemData)) continue;
-                _onPaymentReceived?.Invoke(foodItemData.price);
-                foodPlate.RemoveFood();
+                OrderedFoodItemData order = customer.CanReceive(foodPlate.OrderedFoodItemData());
+                if (order == null) continue;
+                var payment = customer.Receive(order);
+                _onPaymentReceived?.Invoke(payment);
+                foodPlate.CleanPlate();
                 return;
             }
         }

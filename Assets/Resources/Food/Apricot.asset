@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f66761b817ff534cb2c730aacf4d6ab, type: 3}
-  m_Name: NasiGoreng
+  m_Name: Apricot
   m_EditorClassIdentifier: 
-  id: a2135f9d-3b56-4eac-8850-6f4dacdb27c2
-  itemName: Nasi Goreng
-  icon: {fileID: 21300000, guid: fd189f74001c1e64b891089d2ca36ce5, type: 3}
+  id: 436b9440-0864-4925-a0cb-beab3da9e8cc
+  itemName: Apricot
+  icon: {fileID: 21300000, guid: f5744eb6e854f1342b1a19a58e49a375, type: 3}
   allowedToppings:
-  - {fileID: 11400000, guid: 81e8cac590e43d945ae80f06ad7fcc02, type: 2}
-  - {fileID: 11400000, guid: e15ad03720d1c1944adb89e8a07ebbfe, type: 2}
-  price: 15
+  - {fileID: 11400000, guid: 2d6d7be8b73788e4992f27b1a36ebcae, type: 2}
+  - {fileID: 11400000, guid: 5189887ac76a53b469f526b895234262, type: 2}
+  price: 12

@@ -17,6 +17,6 @@ MonoBehaviour:
     targetAmount: 10
     currentAmount: 0
     goalType: 0
-  completionCondition: 0
+  completionType: 0
   customerLimit: 0
-  duration: 20
+  duration: 60

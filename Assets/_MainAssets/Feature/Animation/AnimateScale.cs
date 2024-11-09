@@ -4,7 +4,7 @@ namespace Animation
 {
     public class AnimateScale : Animate
     {
-        private void Awake()
+        protected virtual void Awake()
         {
             originalSize = transform.localScale;
         }

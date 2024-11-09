@@ -36,9 +36,9 @@ namespace StageSystem
             objectiveManager.Hide();
         }
 
-        private void OnPlateServe(FoodItemData foodItemData, FoodPlate foodPlate)
+        private void OnPlateServe(FoodPlate foodPlate)
         {
-            customerSpawner.OnPlateServe(foodItemData, foodPlate);
+            customerSpawner.OnPlateServe(foodPlate);
         }
 
         private void StageFinished()
@@ -80,7 +80,7 @@ namespace StageSystem
                 objectiveManager.OnObjectiveEvent(satisfactionEvent);
             }
 
-            if (customerLeaveData.isLastCustomer) StageFinished();
+            if (customerLeaveData.isLastCustomer && stageCompletionComponent.CheckIfCompleted()) StageFinished();
         }
 
         private void OnCustomerEnter()
