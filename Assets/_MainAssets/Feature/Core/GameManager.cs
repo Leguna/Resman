@@ -1,14 +1,17 @@
-﻿using CustomerSystem;
+﻿using Currency;
+using CustomerSystem;
 using StageSystem;
 using Touch;
 using UnityEngine;
 using Utilities;
+using Utilities.SaveLoad;
 
-public class GameManager : DontDestroyThis
+public class GameManager : SingletonMonoBehaviour<GameManager>
 {
     private Stage _stage;
     private CustomerSpawner _customerSpawner;
     private TouchInput _touchInput;
+    public Gold gold;
 
     public StageLoader stageLoader;
     public GameOver gameOver;
@@ -20,12 +23,14 @@ public class GameManager : DontDestroyThis
     protected override void Awake()
     {
         base.Awake();
+        SaveLoadSystem.Load(gold);
         _touchInput = FindObjectOfType<TouchInput>();
         _customerSpawner = FindObjectOfType<CustomerSpawner>();
         stageLoader = FindObjectOfType<StageLoader>();
         _stage = FindObjectOfType<Stage>();
 
         stageLoader.ToggleStagePanel(true);
+        _stage.onPaymentReceived = OnPaymentReceived;
 
         _touchInput.enabled = false;
         stageLoader.onStageSelected = OnStageLoad;
@@ -33,6 +38,11 @@ public class GameManager : DontDestroyThis
         stageLoader.onResume = OnResume;
         gameOver.onRestart = OnRestart;
         gameOver.onOpenMenu = OnOpenMenu;
+    }
+
+    private void OnPaymentReceived(Gold payment)
+    {
+        gold.Add(payment.value);
     }
 
     private void OnResume()
@@ -63,6 +73,7 @@ public class GameManager : DontDestroyThis
     {
         if (state != StageState.Ended) return;
         OnGameOver();
+        SaveLoadSystem.Save(gold);
     }
 
     private void OnRestart()
@@ -76,6 +87,7 @@ public class GameManager : DontDestroyThis
 
     private void OnGameOver()
     {
+        SaveLoadSystem.Save(gold);
         gameOver.Open();
         _customerSpawner.Reset();
         stageLoader.enabled = false;

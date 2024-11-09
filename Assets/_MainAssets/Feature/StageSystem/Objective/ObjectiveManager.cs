@@ -1,32 +1,73 @@
-using System;
+using DG.Tweening;
+using Events;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Utilities;
 
 namespace StageSystem.Objective
 {
     public class ObjectiveManager : MonoBehaviour
     {
-        private Goal _goal;
+        private GoalData _goalData;
 
         [SerializeField] private Image objectiveImage;
         [SerializeField] private TMP_Text objectiveText;
-        
-        private Action _onObjectiveComplete = delegate { };
 
-        public void Init(GoalData goalData, Action onObjectiveComplete)
+        private void Start()
         {
-            return;
-            _goal.goalData = goalData;
-            _onObjectiveComplete = onObjectiveComplete;
+            EventManager.AddEventListener<AddObjectiveEvent>(OnObjectiveEvent);
+        }
+
+        public void Init(GoalData goalData = null)
+        {
+            if (goalData == null)
+            {
+                Hide();
+                return;
+            }
+            Show();
+            _goalData = goalData;
+            _goalData.ResetObjective();
+            ResetObjective();
+        }
+
+        public void Hide()
+        {
+            objectiveText.transform.parent.gameObject.SetActive(false);
+            objectiveImage.gameObject.SetActive(false);
+        }
+        
+        private void Show()
+        {
             objectiveText.transform.parent.gameObject.SetActive(true);
-            UpdateObjectiveUI();
+            objectiveImage.gameObject.SetActive(true);
         }
 
         private void UpdateObjectiveUI()
         {
-            objectiveText.text = _goal.goalData.GetObjectiveDescription();
-            objectiveImage.fillAmount = _goal.goalData.GetProgress();
+            objectiveText.text = _goalData.GetProgressText();
+            objectiveImage.DOFillAmount(_goalData.GetProgress(), 0.3f);
+        }
+
+        private void ResetObjective()
+        {
+            objectiveText.transform.parent.gameObject.SetActive(true);
+            objectiveImage.gameObject.SetActive(true);
+            UpdateObjectiveUI();
+        }
+
+
+        private void OnDisable()
+        {
+            EventManager.RemoveEventListener<AddObjectiveEvent>(OnObjectiveEvent);
+        }
+
+        public void OnObjectiveEvent(AddObjectiveEvent data)
+        {
+            if (data.GoalType != _goalData.goalType) return;
+            _goalData.UpdateObjective(data.Amount);
+            UpdateObjectiveUI();
         }
     }
 }

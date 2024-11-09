@@ -15,25 +15,42 @@ namespace CustomerSystem
         [SerializeField] private CustomerComponent customerPrefab;
         private Timer _spawnTimer;
 
+
+        private Action _onCustomerLeave = delegate { };
+        private Action _onCustomerEnter = delegate { };
+        private Action<int> _onPaymentReceived = delegate { };
+
         private List<CustomerComponent> _customers = new();
 
-        public void Init()
+        public bool isShopOpen;
+
+        private void Awake()
         {
             _spawnTimer = TryGetComponent(out Timer timer) ? timer : gameObject.AddComponent<Timer>();
+        }
+
+        public void Init(Action<int> paymentReceived, Action onLastCustomerLeave, Action customerEnter)
+        {
+            _onCustomerLeave = onLastCustomerLeave;
+            _onCustomerEnter = customerEnter;
+            _onPaymentReceived = paymentReceived;
             _spawnTimer.onTimerEnded = SpawnCustomer;
             _customers = new List<CustomerComponent>();
-            _spawnTimer.StartTimer(Random.Range(spawnInterval.min, spawnInterval.max));
+            _spawnTimer.Start(Random.Range(spawnInterval.min, spawnInterval.max));
+            isShopOpen = true;
         }
 
         private void SpawnCustomer()
         {
-            _spawnTimer.StartTimer(Random.Range(spawnInterval.min, spawnInterval.max));
+            if (!isShopOpen) return;
+            _spawnTimer.Start(Random.Range(spawnInterval.min, spawnInterval.max));
             if (_customers.Count >= customerPositions.Count) return;
             var pos = UnoccupiedPosition();
             var randomCustomerData = customerData[Random.Range(0, customerData.Count)];
             var customer = Instantiate(customerPrefab, pos.position, Quaternion.identity, pos);
             customer.Init(randomCustomerData, OnCustomerLeave);
             _customers.Add(customer);
+            _onCustomerEnter?.Invoke();
         }
 
         private void OnValidate()
@@ -47,13 +64,16 @@ namespace CustomerSystem
         private void OnCustomerLeave(CustomerComponent customer)
         {
             _customers.Remove(customer);
+            if (_customers.Count == 0) _onCustomerLeave?.Invoke();
             Destroy(customer.gameObject);
         }
 
         public void Reset()
         {
+            isShopOpen = false;
             _customers.ForEach(customer => Destroy(customer.gameObject));
             _customers.Clear();
+            _spawnTimer.Stop();
         }
 
         public void Resume()
@@ -63,7 +83,7 @@ namespace CustomerSystem
                 DOTween.Play(customer.transform);
             }
 
-            _spawnTimer.ResumeTimer();
+            _spawnTimer.Resume();
         }
 
         public void Pause()
@@ -73,13 +93,13 @@ namespace CustomerSystem
                 DOTween.Pause(customer.transform);
             }
 
-            _spawnTimer.PauseTimer();
+            _spawnTimer.Pause();
         }
 
         public void Restart()
         {
             Reset();
-            Init();
+            Init(_onPaymentReceived, _onCustomerLeave, _onCustomerEnter);
         }
 
         private Transform UnoccupiedPosition()
@@ -92,9 +112,15 @@ namespace CustomerSystem
             foreach (var customer in _customers)
             {
                 if (!customer.TryReceive(foodItemData)) continue;
+                _onPaymentReceived?.Invoke(foodItemData.price);
                 foodPlate.RemoveFood();
                 return;
             }
+        }
+
+        public void CloseShop()
+        {
+            isShopOpen = false;
         }
 
         [Serializable]

@@ -27,7 +27,7 @@ namespace CustomerSystem
                 canvas.gameObject.SetActive(false);
             });
             canvas.gameObject.SetActive(true);
-            StartTimer(timeLimit);
+            Start(timeLimit);
         }
 
         private void Update()

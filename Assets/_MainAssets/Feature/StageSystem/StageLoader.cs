@@ -4,11 +4,10 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Utilities;
 
 namespace StageSystem
 {
-    public class StageLoader : DontDestroyThis
+    public class StageLoader : MonoBehaviour
     {
         private List<StageData> _stages;
         [SerializeField] private GameObject stagePanel;
@@ -20,9 +19,8 @@ namespace StageSystem
         public Action onPause;
         public Action onResume;
 
-        protected override void Awake()
+        protected void Awake()
         {
-            base.Awake();
             _stages = LoadStageFromResources().ToList();
             _mainInputAction = new MainInputAction();
         }

@@ -1,6 +1,8 @@
 ﻿using System;
 using CookSystem;
+using Currency;
 using CustomerSystem;
+using Events;
 using StageSystem.Completion;
 using StageSystem.Objective;
 using UnityEngine;
@@ -15,30 +17,21 @@ namespace StageSystem
         public Action<StageState> onStageStateChanged = delegate { };
         [SerializeField] private KitchenSystem kitchenSystem;
         [SerializeField] private CustomerSpawner customerSpawner;
-
-        // TODO: Need Optimize
-        [SerializeField] private StageTimer stageTimer;
-        [SerializeField] private CustomerCounter customerCounter;
         [SerializeField] private ObjectiveManager objectiveManager;
+        [SerializeField] private StageCompletionComponent stageCompletionComponent;
+
+        private Gold _stageGold;
+        public Action<Gold> onPaymentReceived = delegate { };
 
         public void Init(StageData stageData)
         {
-            stageState = StageState.Idle;
-            onStageStateChanged?.Invoke(stageState);
+            SetState(StageState.Idle);
+            _stageGold = new Gold();
             _currentStageData = stageData;
             kitchenSystem.Init(OnPlateServe);
             kitchenSystem.HideIngredientSources();
-            objectiveManager.Init(stageData.goalData, StageFinished);
             customerSpawner.Reset();
-            switch (stageData.completionCondition)
-            {
-                case CompletionType.Timed:
-                    stageTimer.Init(stageData.duration, StageFinished);
-                    break;
-                case CompletionType.Customer:
-                    customerCounter.Init(stageData.customerLimit, StageFinished);
-                    break;
-            }
+            objectiveManager.Hide();
         }
 
         private void OnPlateServe(FoodItemData foodItemData, FoodPlate foodPlate)
@@ -48,31 +41,67 @@ namespace StageSystem
 
         private void StageFinished()
         {
-            stageState = StageState.Ended;
-            Pause();
+            onPaymentReceived?.Invoke(_stageGold);
+            SetState(StageState.Ended);
+            stageCompletionComponent.Hide();
+            Reset();
+        }
+
+        private void SetState(StageState state)
+        {
+            stageState = state;
             onStageStateChanged?.Invoke(stageState);
         }
 
         public void Play()
         {
-            stageState = StageState.Playing;
-            stageTimer.StartTimer(_currentStageData.duration);
+            objectiveManager.Init(_currentStageData.goalData);
+            SetState(StageState.Playing);
             kitchenSystem.ShowIngredientSources();
-            customerCounter.ResetCustomerCount();
-            customerSpawner.Init();
+            stageCompletionComponent.Init(_currentStageData, StageFinished);
+            customerSpawner.Init(OnPaymentReceived, OnCustomerLeave, OnCustomerEnter);
+        }
+
+
+        private void OnCustomerLeave()
+        {
+            if (stageCompletionComponent.CheckIfCompleted())
+            {
+                StageFinished();
+            }
+        }
+
+        private void OnCustomerEnter()
+        {
+            stageCompletionComponent.DecrementCustomerCount();
+            if (stageCompletionComponent.CheckIfCompleted())
+            {
+                customerSpawner.CloseShop();
+            }
+        }
+
+        private void OnPaymentReceived(int payment)
+        {
+            _stageGold.Add(payment);
+            var paymentEvent = new AddObjectiveEvent
+            {
+                GoalType = GoalType.RevenueGoal,
+                Amount = payment
+            };
+            objectiveManager.OnObjectiveEvent(paymentEvent);
         }
 
         public void Pause()
         {
-            stageState = StageState.Paused;
-            stageTimer.PauseTimer();
+            SetState(StageState.Paused);
+            stageCompletionComponent.Pause();
             customerSpawner.Pause();
         }
 
         public void Resume()
         {
-            stageState = StageState.Playing;
-            stageTimer.ResumeTimer();
+            SetState(StageState.Playing);
+            stageCompletionComponent.Resume();
             customerSpawner.Resume();
         }
 

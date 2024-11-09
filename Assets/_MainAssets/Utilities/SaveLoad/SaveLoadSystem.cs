@@ -20,7 +20,7 @@ namespace Utilities.SaveLoad
 
         public static void Load(ISaveable saveable)
         {
-            // If file doesn't exist, don't load
+            if (!File.Exists(GetPathFromSaveable(saveable))) return;
             var path = GetPathFromSaveable(saveable);
             using var stream = File.Open(path, FileMode.Open);
             var formatter = new BinaryFormatter();

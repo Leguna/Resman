@@ -12,7 +12,7 @@ namespace CookSystem
         public string itemName;
         public Sprite icon;
         public List<ToppingItemData> allowedToppings = new();
-        public float price = 5;
+        public int price = 5;
 
         private bool CanAddTopping(ToppingItemData topping) => allowedToppings.Contains(topping);
 

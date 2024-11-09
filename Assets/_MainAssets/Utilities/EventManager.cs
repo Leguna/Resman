@@ -7,12 +7,12 @@ namespace Utilities
 {
     public delegate void EventCallback<in T>(T data);
 
-    public class EventManager : MonoBehaviour
+    public class EventManager : SingletonMonoBehaviour<EventManager>
     {
         private static Dictionary<Type, List<Delegate>> _eventDictionary = new();
         private static string _eventSceneName;
 
-        private void Awake()
+        protected override void Awake()
         {
             _eventSceneName = SceneManager.GetActiveScene().name;
             _eventDictionary = new Dictionary<Type, List<Delegate>>();

@@ -8,7 +8,7 @@ namespace StageSystem
     public class StageData : MyScriptableObject
     {
         public GoalData goalData;
-        public CompletionType completionCondition;
+        public CompletionType completionType;
 
         public int customerLimit = 5;
         public float duration = 60f;
@@ -18,7 +18,7 @@ namespace StageSystem
             try
             {
                 base.OnValidate();
-                switch (completionCondition)
+                switch (completionType)
                 {
                     case CompletionType.Timed:
                         customerLimit = 0;
