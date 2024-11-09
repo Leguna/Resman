@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using Animation;
 using CustomerSystem.OrderSystem;
+using Events;
 using Touch;
 using UnityEngine;
+using Utilities;
 
 namespace CookSystem
 {
@@ -99,6 +101,7 @@ namespace CookSystem
             foodItemData = null;
             foodSpriteRenderer.gameObject.SetActive(false);
             _animate.PlayAnimation();
+            EventManager.TriggerEvent(new PlayAudioEvent { audioName = "servingSound" });
         }
 
         public void OnTouch() => TrySend();

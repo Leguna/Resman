@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7239ebaed2a04da39710aaec0bca73cd, type: 3}
   m_Name: AudioClipData
   m_EditorClassIdentifier: 
-  cookingSound: {fileID: 0}
-  servingSound: {fileID: 0}
-  comboAchievedSound: {fileID: 0}
+  cookingSound: {fileID: 8300000, guid: e3f874224b5320d4cbf1af1d658656b0, type: 3}
+  servingSound: {fileID: 8300000, guid: 1c448522f197aa54ba1506fbb7a46cf1, type: 3}
+  comboAchievedSound: {fileID: 8300000, guid: 35d2786d886feb74798092dd522b3a26, type: 3}

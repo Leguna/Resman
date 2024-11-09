@@ -1,7 +1,9 @@
 ﻿using DG.Tweening;
+using Events;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Utilities;
 
 namespace Combo
 {
@@ -45,6 +47,7 @@ namespace Combo
 
         public void AddCombo()
         {
+            EventManager.TriggerEvent(new PlayAudioEvent { audioName = "comboAchievedSound" });
             _comboCount++;
             comboBar.DOFillAmount(1, 0.2f);
             _timer.Start(comboTimeLimit);

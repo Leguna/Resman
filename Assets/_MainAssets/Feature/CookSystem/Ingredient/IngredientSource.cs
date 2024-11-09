@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Events;
 using Touch;
 using UnityEngine;
+using Utilities;
 
 namespace CookSystem.Ingredient
 {
@@ -28,6 +30,7 @@ namespace CookSystem.Ingredient
             {
                 if (!utensil.AddIngredient(ingredient)) continue;
                 utensil.StartCook();
+                EventManager.TriggerEvent(new PlayAudioEvent { audioName = "cookingSound" });
                 break;
             }
         }
