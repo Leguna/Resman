@@ -41,8 +41,15 @@ namespace CookSystem
         {
             foreach (var foodPlate in foodPlates)
             {
+                if (foodPlate.foodItemData == null) continue;
                 if (!foodPlate.TryAddTopping(toppingItemData)) continue;
-                break;
+                return;
+            }
+
+            foreach (var foodPlate in foodPlates)
+            {
+                if (!foodPlate.TryAddTopping(toppingItemData)) continue;
+                return;
             }
         }
     }

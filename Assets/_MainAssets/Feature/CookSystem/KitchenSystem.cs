@@ -34,24 +34,8 @@ namespace CookSystem
 
         private void OnUtensilServe(FoodItemData foodItemData, Utensil utensil)
         {
-            // if (!foodPlates.Any(foodPlate =>
-            //     {
-            //         if (foodPlate.foodItemData == null) return false;
-            //         return foodPlate.TryReceive(foodItemData);
-            //     }))
-            // {
-            //     if (!foodPlates.Any(foodPlate =>
-            //         {
-            //             if (foodPlate.foodItemData != null) return false;
-            //             foodPlate.TryReceive(foodItemData);
-            //             return true;
-            //         }))
-            //     {
-            //         return;
-            //     }
-            // }
-
             var canReceive = false;
+
             foreach (var foodPlate in foodPlates)
             {
                 var isReceived = foodPlate.TryReceive(foodItemData);
