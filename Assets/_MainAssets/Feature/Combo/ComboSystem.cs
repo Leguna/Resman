@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,9 +8,10 @@ namespace Combo
     public class ComboSystem : MonoBehaviour
     {
         [SerializeField] private Image comboBar;
-        [SerializeField] private float comboTime = 3f;
+        [SerializeField] private TMP_Text comboText;
+        [SerializeField] private float comboTimeLimit = 3f;
 
-        private int _comboCount = 0;
+        private int _comboCount;
         private Timer _timer;
 
         private void Awake()
@@ -19,9 +21,10 @@ namespace Combo
 
         public void Init()
         {
-            _comboCount = 0;
-            comboBar.fillAmount = 0;
+            ResetCombo();
             _timer.onTimerEnded += ResetCombo;
+            Show();
+            _timer.Start(0);
         }
 
         private void Update()
@@ -32,28 +35,46 @@ namespace Combo
             }
         }
 
-        private void ResetCombo()
+        public void ResetCombo()
         {
             _comboCount = 0;
             comboBar.fillAmount = 0;
             _timer.Stop();
+            comboText.text = _comboCount.ToString();
         }
 
         public void AddCombo()
         {
             _comboCount++;
-            comboBar.DOFillAmount((float)_comboCount / 10, 0.5f);
-            _timer.Start(comboTime);
+            comboBar.DOFillAmount(1, 0.2f);
+            _timer.Start(comboTimeLimit);
+            comboText.text = _comboCount.ToString();
         }
 
-        public void PauseComboTimer()
+        public void Hide()
+        {
+            Pause();
+            comboBar.transform.parent.gameObject.SetActive(false);
+        }
+
+        private void Show()
+        {
+            comboBar.transform.parent.gameObject.SetActive(true);
+        }
+
+        public void Pause()
         {
             _timer.Pause();
         }
 
-        public void ResumeComboTimer()
+        public void Resume()
         {
             _timer.Resume();
+        }
+
+        public float GetComboCount()
+        {
+            return _comboCount;
         }
     }
 }

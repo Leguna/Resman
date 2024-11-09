@@ -1,4 +1,5 @@
 ﻿using System;
+using Combo;
 using CookSystem;
 using Currency;
 using CustomerSystem;
@@ -19,6 +20,7 @@ namespace StageSystem
         [SerializeField] private CustomerSpawner customerSpawner;
         [SerializeField] private ObjectiveManager objectiveManager;
         [SerializeField] private StageCompletionComponent stageCompletionComponent;
+        [SerializeField] private ComboSystem comboSystem;
 
         private Gold _stageGold;
         public Action<Gold> onPaymentReceived = delegate { };
@@ -45,6 +47,7 @@ namespace StageSystem
             SetState(StageState.Ended);
             stageCompletionComponent.Hide();
             Reset();
+            comboSystem.Hide();
         }
 
         private void SetState(StageState state)
@@ -55,6 +58,7 @@ namespace StageSystem
 
         public void Play()
         {
+            comboSystem.Init();
             objectiveManager.Init(_currentStageData.goalData);
             SetState(StageState.Playing);
             kitchenSystem.ShowIngredientSources();
@@ -63,12 +67,20 @@ namespace StageSystem
         }
 
 
-        private void OnCustomerLeave()
+        private void OnCustomerLeave(CustomerLeaveData customerLeaveData)
         {
-            if (stageCompletionComponent.CheckIfCompleted())
+            if (customerLeaveData.leaveReason == CustomerLeaveReason.Angry) comboSystem.ResetCombo();
+            if (customerLeaveData.leaveReason == CustomerLeaveReason.Served)
             {
-                StageFinished();
+                var satisfactionEvent = new AddObjectiveEvent
+                {
+                    GoalType = GoalType.SatisfactionGoal,
+                    Amount = 1
+                };
+                objectiveManager.OnObjectiveEvent(satisfactionEvent);
             }
+
+            if (customerLeaveData.isLastCustomer) StageFinished();
         }
 
         private void OnCustomerEnter()
@@ -82,13 +94,26 @@ namespace StageSystem
 
         private void OnPaymentReceived(int payment)
         {
+            comboSystem.AddCombo();
             _stageGold.Add(payment);
             var paymentEvent = new AddObjectiveEvent
             {
                 GoalType = GoalType.RevenueGoal,
                 Amount = payment
             };
+            var serveEvent = new AddObjectiveEvent
+            {
+                GoalType = GoalType.ServeGoal,
+                Amount = 1
+            };
+            var chainComboEvent = new AddObjectiveEvent
+            {
+                GoalType = GoalType.ChainComboGoal,
+                Amount = comboSystem.GetComboCount()
+            };
             objectiveManager.OnObjectiveEvent(paymentEvent);
+            objectiveManager.OnObjectiveEvent(serveEvent);
+            objectiveManager.OnObjectiveEvent(chainComboEvent);
         }
 
         public void Pause()
@@ -96,6 +121,7 @@ namespace StageSystem
             SetState(StageState.Paused);
             stageCompletionComponent.Pause();
             customerSpawner.Pause();
+            comboSystem.Pause();
         }
 
         public void Resume()
@@ -103,6 +129,7 @@ namespace StageSystem
             SetState(StageState.Playing);
             stageCompletionComponent.Resume();
             customerSpawner.Resume();
+            comboSystem.Resume();
         }
 
         public void Restart()

@@ -12,6 +12,8 @@ namespace StageSystem.Objective
         public GoalType goalType = GoalType.RevenueGoal;
         public string GetObjectiveDescription() => $"Achieve {targetAmount} in {goalType}";
         public void UpdateObjective(float amount) => currentAmount += amount;
+        
+        public void SetObjective(float amount) => currentAmount = amount;
 
         public void ResetObjective() => currentAmount = 0;
 

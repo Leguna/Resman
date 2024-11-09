@@ -20,9 +20,9 @@ namespace CustomerSystem
 
         [SerializeField] private List<FoodItemData> allowedFoodItemData = new();
 
-        private Action<CustomerComponent> _onLeave;
+        private Action<CustomerComponent,CustomerLeaveData> _onLeave;
 
-        public void Init(CustomerData customerData, Action<CustomerComponent> onLeave)
+        public void Init(CustomerData customerData, Action<CustomerComponent,CustomerLeaveData> onLeave)
         {
             this.customerData = customerData;
             _onLeave = onLeave;
@@ -33,7 +33,7 @@ namespace CustomerSystem
         private void SetOrder(Order order)
         {
             this.order = order;
-            satisfactionTimer.Init(customerData.patience, Leave);
+            satisfactionTimer.Init(customerData.patience, AngryLeave);
         }
 
 
@@ -49,9 +49,14 @@ namespace CustomerSystem
             transform.DOLocalMoveX(0, 2f).OnComplete(() =>
             {
                 GenerateRandomOrder();
-                satisfactionTimer.Init(customerData.patience, Leave);
+                satisfactionTimer.Init(customerData.patience, AngryLeave);
                 UpdateUI();
             });
+        }
+
+        private void AngryLeave()
+        {
+            Leave(new CustomerLeaveData(leaveReason: CustomerLeaveReason.Angry));
         }
 
         private void UpdateUI()
@@ -72,10 +77,13 @@ namespace CustomerSystem
         {
         }
 
-        private void Leave()
+        private void Leave(CustomerLeaveData customerLeaveData = default)
         {
             CloseOrder();
-            transform.DOLocalMoveX(15, 2f).OnComplete(() => { _onLeave?.Invoke(this); });
+            transform.DOLocalMoveX(15, 2f).OnComplete(() =>
+            {
+                _onLeave?.Invoke(this, customerLeaveData);
+            });
         }
 
         public bool TryReceive(FoodItemData item)

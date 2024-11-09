@@ -16,7 +16,7 @@ namespace CustomerSystem
         private Timer _spawnTimer;
 
 
-        private Action _onCustomerLeave = delegate { };
+        private Action<CustomerLeaveData> _onCustomerLeave = delegate { };
         private Action _onCustomerEnter = delegate { };
         private Action<int> _onPaymentReceived = delegate { };
 
@@ -29,7 +29,8 @@ namespace CustomerSystem
             _spawnTimer = TryGetComponent(out Timer timer) ? timer : gameObject.AddComponent<Timer>();
         }
 
-        public void Init(Action<int> paymentReceived, Action onLastCustomerLeave, Action customerEnter)
+        public void Init(Action<int> paymentReceived, Action<CustomerLeaveData> onLastCustomerLeave,
+            Action customerEnter)
         {
             _onCustomerLeave = onLastCustomerLeave;
             _onCustomerEnter = customerEnter;
@@ -61,10 +62,14 @@ namespace CustomerSystem
         }
 
 
-        private void OnCustomerLeave(CustomerComponent customer)
+        private void OnCustomerLeave(CustomerComponent customer, CustomerLeaveData customerLeaveData)
         {
             _customers.Remove(customer);
-            if (_customers.Count == 0) _onCustomerLeave?.Invoke();
+            _onCustomerLeave?.Invoke(new CustomerLeaveData
+            {
+                isLastCustomer = _customers.Count == 0,
+                leaveReason = customerLeaveData.leaveReason
+            });
             Destroy(customer.gameObject);
         }
 

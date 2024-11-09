@@ -26,6 +26,7 @@ namespace StageSystem.Objective
                 Hide();
                 return;
             }
+
             Show();
             _goalData = goalData;
             _goalData.ResetObjective();
@@ -37,7 +38,7 @@ namespace StageSystem.Objective
             objectiveText.transform.parent.gameObject.SetActive(false);
             objectiveImage.gameObject.SetActive(false);
         }
-        
+
         private void Show()
         {
             objectiveText.transform.parent.gameObject.SetActive(true);
@@ -66,7 +67,18 @@ namespace StageSystem.Objective
         public void OnObjectiveEvent(AddObjectiveEvent data)
         {
             if (data.GoalType != _goalData.goalType) return;
-            _goalData.UpdateObjective(data.Amount);
+            switch (data.GoalType)
+            {
+                case GoalType.ChainComboGoal:
+                    if (data.Amount > _goalData.currentAmount) _goalData.SetObjective(data.Amount);
+                    break;
+                case GoalType.SatisfactionGoal:
+                case GoalType.RevenueGoal:
+                case GoalType.ServeGoal:
+                    _goalData.UpdateObjective(data.Amount);
+                    break;
+            }
+
             UpdateObjectiveUI();
         }
     }
