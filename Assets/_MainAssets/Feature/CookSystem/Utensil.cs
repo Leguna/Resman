@@ -4,6 +4,7 @@ using CookSystem.Ingredient;
 using Touch;
 using UnityEngine;
 using UnityEngine.UI;
+using UpgradeSystem;
 
 namespace CookSystem
 {
@@ -87,7 +88,7 @@ namespace CookSystem
 
         private void Cook()
         {
-            _cookedIngredientComponent.Cook(utensilData.GetCookSpeed() * Time.deltaTime * GameManager.gameSpeed);
+            _cookedIngredientComponent.Cook(utensilData.GetCookSpeed() * GameManager.GameDeltaTime);
             progress.fillAmount = _cookedIngredientComponent.GetProgress();
         }
 
@@ -127,5 +128,6 @@ namespace CookSystem
         public void OnTouch() => PutOut();
 
         public void OnDoubleTap() => TrashBurnt();
+
     }
 }

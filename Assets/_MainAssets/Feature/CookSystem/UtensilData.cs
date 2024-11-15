@@ -1,13 +1,15 @@
 using System;
 using UnityEngine;
+using UpgradeSystem;
 
 namespace CookSystem
 {
     [CreateAssetMenu(fileName = "Utensil", menuName = "Cooking/Utensil")]
-    public class UtensilData : MyScriptableObject
+    public class UtensilData : MyScriptableObject, IUpgradeable
     {
         public string utensilName;
         public int level = 1;
+        public int maxLevel = 5;
         public float baseCookSpeed = 1f;
         public float upgradeMultiplier = 1.2f;
 
@@ -15,7 +17,22 @@ namespace CookSystem
 
         public float GetCookSpeed() => baseCookSpeed * Mathf.Pow(upgradeMultiplier, level - 1);
 
-        public void Upgrade() => level++;
+        public string Name => utensilName;
+        public int Level => level;
+        public int MaxLevel => maxLevel;
+        public int Cost => level * 100;
+
+        public void Upgrade()
+        {
+            if (level >= maxLevel) throw new Exception("Max level reached");
+            level++;
+        }
+
+        public void Downgrade()
+        {
+            if (level <= 1)  throw new Exception("Min level reached");
+            level--;
+        }
 
         protected override void OnValidate()
         {

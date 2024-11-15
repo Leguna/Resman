@@ -43,7 +43,8 @@ namespace CookSystem
 
         public void Init(Action<FoodPlate> onPlateServe)
         {
-            foodItemData = null;
+            CleanPlate();
+            foodItemData = null; 
             _onPlateServe = onPlateServe;
             foodSpriteRenderer.gameObject.SetActive(false);
         }

@@ -18,14 +18,15 @@ namespace Utilities.SaveLoad
             formatter.Serialize(stream, saveObject);
         }
 
-        public static void Load(ISaveable saveable)
+        public static void Load<T>(out T saveable) where T : ISaveable, new()
         {
+            saveable = new T();
             if (!File.Exists(GetPathFromSaveable(saveable))) return;
             var path = GetPathFromSaveable(saveable);
             using var stream = File.Open(path, FileMode.Open);
             var formatter = new BinaryFormatter();
             var saveObject = formatter.Deserialize(stream);
-            saveable.RestoreState(saveObject);
+            saveable?.RestoreState(saveObject);
         }
 
         public static void Delete(ISaveable saveable)

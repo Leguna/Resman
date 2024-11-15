@@ -4,6 +4,7 @@ using StageSystem;
 using StageSystem.Objective;
 using Touch;
 using UnityEngine;
+using UpgradeSystem;
 using Utilities;
 using Utilities.SaveLoad;
 
@@ -17,6 +18,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public StageLoader stageLoader;
     public GameOver gameOver;
     public ObjectiveManager objectiveManager;
+    public UpgradeManager upgradeManager;
 
     public static float gameSpeed = 1;
 
@@ -25,12 +27,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     protected override void Awake()
     {
         base.Awake();
-        SaveLoadSystem.Load(gold);
+        SaveLoadSystem.Load(out gold);
         _touchInput = FindObjectOfType<TouchInput>();
         _customerSpawner = FindObjectOfType<CustomerSpawner>();
         stageLoader = FindObjectOfType<StageLoader>();
         _stage = FindObjectOfType<Stage>();
         objectiveManager = FindObjectOfType<ObjectiveManager>();
+        upgradeManager = FindObjectOfType<UpgradeManager>();
 
         stageLoader.ToggleStagePanel(true);
         _stage.onPaymentReceived = OnPaymentReceived;
@@ -41,6 +44,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         stageLoader.onResume = OnResume;
         gameOver.onRestart = OnRestart;
         gameOver.onOpenMenu = OnOpenMenu;
+        upgradeManager.ToggleUpgradePanel(true);
     }
 
     private void OnPaymentReceived(Gold payment)
@@ -55,6 +59,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         _stage.Resume();
         _touchInput.enabled = true;
         _customerSpawner.Resume();
+        upgradeManager.ToggleUpgradePanel(false);
     }
 
     private void OnPause()
@@ -63,6 +68,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         _touchInput.enabled = false;
         _stage.Pause();
         _customerSpawner.Pause();
+        upgradeManager.ToggleUpgradePanel(false);
     }
 
     private void OnStageLoad(StageData stageData)
@@ -71,6 +77,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         _stage.onStageStateChanged = StageOnStageStateChanged;
         _stage.Play();
         _touchInput.enabled = true;
+        upgradeManager.ToggleUpgradePanel(false);
     }
 
     private void StageOnStageStateChanged(StageState state)
@@ -101,6 +108,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         _touchInput.enabled = false;
         gameSpeed = 0;
         stageLoader.Disable();
+        upgradeManager.ToggleUpgradePanel(false);
     }
 
     private void OnOpenMenu()
@@ -112,5 +120,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         _stage.Init(null);
         _touchInput.enabled = false;
         gameSpeed = 0;
+        upgradeManager.ToggleUpgradePanel(true);
     }
 }

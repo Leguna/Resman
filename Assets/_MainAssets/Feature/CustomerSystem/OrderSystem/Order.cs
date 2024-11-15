@@ -24,6 +24,7 @@ namespace CustomerSystem.OrderSystem
 
         public OrderedFoodItemData CanReceive(OrderedFoodItemData item)
         {
+            allOrders ??= new List<OrderedFoodItemData>();
             foreach (var orderedFood in allOrders)
             {
                 if (orderedFood.foodItemData != item.foodItemData) continue;

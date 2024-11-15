@@ -44,8 +44,8 @@ namespace StageSystem
 
         private void LoadStageFromResources()
         {
-            var stageDataList = Resources.LoadAll<StageData>(MyResource.levelResourcePath);
-            var stageItem = Resources.Load<Button>(MyResource.stageItemResourcePath);
+            var stageDataList = Resources.LoadAll<StageData>(MyResource.LevelResourcePath);
+            var stageItem = Resources.Load<Button>(MyResource.StageItemResourcePath);
             foreach (var stageData in stageDataList)
             {
                 var stage = Instantiate(stageItem, stagePanel.transform);

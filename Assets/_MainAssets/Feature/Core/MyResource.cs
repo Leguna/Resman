@@ -1,5 +1,7 @@
-public class MyResource
+public abstract class MyResource
 {
-    public static string levelResourcePath = "Level";
-    public static string stageItemResourcePath = "Prefabs/StageItem";
+    public const string LevelResourcePath = "Level";
+    public const string StageItemResourcePath = "Prefabs/StageItem";
+    public const string Utensil = "Utensil";
+    public const string UpgradedItemPrefab = "Prefabs/UtensilUpgradeItem";
 }
