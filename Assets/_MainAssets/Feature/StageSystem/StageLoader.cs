@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,9 +7,9 @@ namespace StageSystem
 {
     public class StageLoader : MonoBehaviour
     {
-        private List<StageData> _stages;
         [SerializeField] private GameObject stagePanel;
-        [SerializeField] private GameObject bg;
+        [SerializeField] private Button bg;
+        [SerializeField] private Button pauseButton;
 
         private MainInputAction _mainInputAction;
 
@@ -19,10 +17,12 @@ namespace StageSystem
         public Action onPause;
         public Action onResume;
 
+
         protected void Awake()
         {
-            _stages = LoadStageFromResources().ToList();
+            LoadStageFromResources();
             _mainInputAction = new MainInputAction();
+            pauseButton.onClick.AddListener(() => { ToggleStagePanel(); });
         }
 
         private void Start()
@@ -34,14 +34,15 @@ namespace StageSystem
         {
             var isActivated = setActive ?? !stagePanel.activeSelf;
             stagePanel.SetActive(isActivated);
-            bg.SetActive(isActivated);
+            bg.gameObject.SetActive(isActivated);
+            pauseButton.gameObject.SetActive(!isActivated);
 
             GameManager.gameSpeed = isActivated ? 0 : 1;
             if (isActivated) onPause?.Invoke();
             else onResume?.Invoke();
         }
 
-        private StageData[] LoadStageFromResources()
+        private void LoadStageFromResources()
         {
             var stageDataList = Resources.LoadAll<StageData>(MyResource.levelResourcePath);
             var stageItem = Resources.Load<Button>(MyResource.stageItemResourcePath);
@@ -53,17 +54,18 @@ namespace StageSystem
                 stage.onClick.RemoveAllListeners();
                 stage.onClick.AddListener(() => LoadStage(stageData));
             }
-
-            return stageDataList;
         }
 
         private void LoadStage(StageData stageData)
         {
+            bg.onClick.RemoveAllListeners();
+            bg.onClick.AddListener(() => ToggleStagePanel(false));
             _mainInputAction.Enable();
             onStageSelected?.Invoke(stageData);
             GameManager.gameSpeed = 1f;
-            bg.SetActive(false);
+            bg.gameObject.SetActive(false);
             stagePanel.gameObject.SetActive(false);
+            pauseButton.gameObject.SetActive(true);
         }
 
         private void OnEnable()
@@ -77,14 +79,18 @@ namespace StageSystem
             _mainInputAction?.Disable();
         }
 
-        public void DisableKeyboard()
+        public void Disable()
         {
             _mainInputAction?.Disable();
+            bg.onClick.RemoveAllListeners();
+            pauseButton.gameObject.SetActive(false);
         }
 
-        public void EnableKeyboard()
+        public void Enable()
         {
             _mainInputAction?.Enable();
+            bg.onClick.AddListener(() => ToggleStagePanel(false));
+            pauseButton.gameObject.SetActive(true);
         }
     }
 }

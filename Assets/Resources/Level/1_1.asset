@@ -19,4 +19,4 @@ MonoBehaviour:
     goalType: 0
   completionType: 0
   customerLimit: 0
-  duration: 10
+  duration: 30

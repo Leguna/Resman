@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: da7fa3b8-f39b-4c61-977c-3b2273b0f59d
   ingredientName: Beras
-  doneCookTime: 2
-  burnTime: 15
+  doneCookTime: 3
+  burnTime: 20
   rawIcon: {fileID: 21300000, guid: d8c85aaa2fbbbef44834b8291b04f048, type: 3}
   cookedIcon: {fileID: 21300000, guid: cca39ee1cae6c3c458f9b0ab3f5c9da2, type: 3}
   burntIcon: {fileID: 21300000, guid: 017e5b394aaffa24a9bc0c35118bd12e, type: 3}

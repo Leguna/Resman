@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 06366310-897c-487a-8bd7-da090348f61a
   ingredientName: Mie
   doneCookTime: 2
-  burnTime: 15
+  burnTime: 20
   rawIcon: {fileID: 21300000, guid: c89a9a1795dc8bf4fa4062cf03b17c2d, type: 3}
   cookedIcon: {fileID: 21300000, guid: 82fe8400d36e0284988c48c7b14d7f71, type: 3}
   burntIcon: {fileID: 21300000, guid: 017e5b394aaffa24a9bc0c35118bd12e, type: 3}

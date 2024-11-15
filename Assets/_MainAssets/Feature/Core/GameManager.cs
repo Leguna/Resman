@@ -82,7 +82,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     private void OnRestart()
     {
-        stageLoader.EnableKeyboard();
+        stageLoader.Enable();
         _customerSpawner.Restart();
         _stage.Restart();
         gameOver.Close();
@@ -97,17 +97,17 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         gameOver.SetTextFinish(result.title, result.content);
         gameOver.Open();
         _customerSpawner.Reset();
-        stageLoader.enabled = false;
         _stage.Reset();
         _touchInput.enabled = false;
         gameSpeed = 0;
+        stageLoader.Disable();
     }
 
     private void OnOpenMenu()
     {
         gameOver.Close();
         stageLoader.ToggleStagePanel(true);
-        stageLoader.DisableKeyboard();
+        stageLoader.Disable();
         _customerSpawner.Reset();
         _stage.Init(null);
         _touchInput.enabled = false;

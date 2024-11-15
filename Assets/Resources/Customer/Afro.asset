@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Afro
   m_EditorClassIdentifier: 
   id: 84afd778-e7b9-43f4-a029-d0a3a24b64a1
-  patience: 1212
+  patience: 10
   customerSprite: {fileID: 21300000, guid: d5c0f06cb049d6c4492d8a341e243f3e, type: 3}
