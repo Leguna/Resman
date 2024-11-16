@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Utilities
 {
@@ -9,25 +7,10 @@ namespace Utilities
 
     public class EventManager : SingletonMonoBehaviour<EventManager>
     {
-        private static Dictionary<Type, List<Delegate>> _eventDictionary = new();
-        private static string _eventSceneName;
-
-        protected override void Awake()
-        {
-            _eventSceneName = SceneManager.GetActiveScene().name;
-            _eventDictionary = new Dictionary<Type, List<Delegate>>();
-        }
-
-        private static void CheckSceneMatches()
-        {
-            var currentSceneName = SceneManager.GetActiveScene().name;
-            if (currentSceneName != _eventSceneName)
-                throw new Exception("EventManager has not been initialized for the current scene");
-        }
+        private static Dictionary<Type, List<Delegate>> _eventDictionary =  new();
 
         public static void AddEventListener<T>(EventCallback<T> listener)
         {
-            CheckSceneMatches();
             if (_eventDictionary.TryGetValue(typeof(T), out var listeners))
             {
                 if (!listeners.Contains(listener)) listeners.Add(listener);
@@ -41,7 +24,6 @@ namespace Utilities
 
         public static List<Delegate> GetListenersOfEvent<T>()
         {
-            CheckSceneMatches();
             if (_eventDictionary.TryGetValue(typeof(T), out var listeners)) return listeners;
 
             return null;
@@ -49,25 +31,21 @@ namespace Utilities
 
         public static void RemoveEventListener<T>(EventCallback<T> listener)
         {
-            CheckSceneMatches();
             if (_eventDictionary.TryGetValue(typeof(T), out var listeners)) listeners.Remove(listener);
         }
 
         public static void RemoveEvent<T>()
         {
-            CheckSceneMatches();
             _eventDictionary.Remove(typeof(T));
         }
 
         public static void RemoveAllEvents()
         {
-            CheckSceneMatches();
             _eventDictionary = new Dictionary<Type, List<Delegate>>();
         }
 
         public static void TriggerEvent<T>(T data)
         {
-            CheckSceneMatches();
             if (!_eventDictionary.TryGetValue(typeof(T), out var listeners)) return;
             foreach (var listener in listeners.ToArray())
                 listener.DynamicInvoke(data);
